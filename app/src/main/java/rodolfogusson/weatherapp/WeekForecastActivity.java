@@ -8,8 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-public class WeekForecastActivity extends AppCompatActivity {
+import org.json.JSONObject;
+
+import rodolfogusson.weatherapp.model.Weather;
+
+public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse{
+
+    Weather weather;
+    TextView city_tv, descr_tv, temp_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,35 +25,32 @@ public class WeekForecastActivity extends AppCompatActivity {
         setContentView(R.layout.activity_week_forecast);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        String city = "Rome,IT";
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        city_tv = (TextView) findViewById(R.id.city_text);
+        descr_tv = (TextView) findViewById(R.id.description);
+        temp_tv = (TextView) findViewById(R.id.temp);
+
+        WeatherRequestTask task = new WeatherRequestTask(this);
+        task.execute(city);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        fillData();
+        if(weather!=null){
+            fillData();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_week_forecast, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -57,6 +62,14 @@ public class WeekForecastActivity extends AppCompatActivity {
     }
 
     private void fillData(){
+        city_tv.setText(weather.getLocation().getCity());
+        descr_tv.setText(weather.getCurrentCondition().getDescription());
+        temp_tv.setText(String.valueOf(weather.getTemperature().getTemp()));
+    }
 
+    @Override
+    public void processFinish(Weather output) {
+        weather = output;
+        fillData();
     }
 }
