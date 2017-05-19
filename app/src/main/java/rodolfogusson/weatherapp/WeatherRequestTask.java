@@ -4,13 +4,14 @@ import android.os.AsyncTask;
 
 import org.json.JSONException;
 
+import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
 
 /**
  * Created by rodolfo on 5/17/17.
  */
 
-public class WeatherRequestTask extends AsyncTask<String, Void, Weather>{
+public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
 
     public AsyncResponse callback = null;
 
@@ -19,25 +20,26 @@ public class WeatherRequestTask extends AsyncTask<String, Void, Weather>{
     }
 
     @Override
-    protected Weather doInBackground(String... params) {
-        Weather weather = new Weather();
-        String data = ( (new WeatherHttpClient()).getWeatherData(params[0]));
+    protected CityWeather doInBackground(String... params) {
+        CityWeather cityWeather = new CityWeather();
+        String weatherNowData = ( (new WeatherHttpClient()).getWeatherNow(params[0]));
+        String weatherForecastData = ( (new WeatherHttpClient()).getWeatherForecast(params[0], 16));
         try {
-            weather = JSONWeatherParser.getWeather(data);
+            cityWeather = JSONWeatherParser.getCityWeather(weatherNowData, weatherForecastData);
             //Getting the icon:
             //weather.setIcon( (new WeatherHttpClient()).getImage(weather.getCurrentCondition().getIconCode()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return weather;
+        return cityWeather;
     }
 
     public interface AsyncResponse{
-        void processFinish(Weather output);
+        void processFinish(CityWeather output);
     }
 
     @Override
-    protected void onPostExecute(Weather weather) {
-        callback.processFinish(weather);
+    protected void onPostExecute(CityWeather cityWeather) {
+        callback.processFinish(cityWeather);
     }
 }

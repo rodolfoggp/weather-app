@@ -1,10 +1,14 @@
 package rodolfogusson.weatherapp;
 
+import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import rodolfogusson.weatherapp.model.CityWeather;
+import rodolfogusson.weatherapp.model.CurrentCondition;
 import rodolfogusson.weatherapp.model.Location;
+import rodolfogusson.weatherapp.model.Temperature;
 import rodolfogusson.weatherapp.model.Weather;
 
 /**
@@ -13,39 +17,88 @@ import rodolfogusson.weatherapp.model.Weather;
 
 public class JSONWeatherParser {
 
-    public static Weather getWeather(String data) throws JSONException{
-        Weather weather = new Weather();
+    public static CityWeather getCityWeather(String weatherNowData, String weatherForecastData) throws JSONException{
+        CityWeather cityWeather = new CityWeather();
 
+        //Getting the weather info for now:
         //Transforming data in JSONObject:
-        JSONObject jObj = new JSONObject(data);
+        JSONObject jNow = new JSONObject(weatherNowData);
 
-        //Getting the current condition:
-        JSONArray jWeatherArray = jObj.getJSONArray("weather");
-        JSONObject jWeather = jWeatherArray.getJSONObject(0);
-        weather.getCurrentCondition().setWeatherId(getInt("id", jWeather));
-        weather.getCurrentCondition().setDescription(getString("description", jWeather));
-        weather.getCurrentCondition().setCondition(getString("main", jWeather));
-        weather.getCurrentCondition().setIconCode(getString("icon", jWeather));
-
-        //Getting the data from main object:
-        JSONObject jMain = getObject("main", jObj);
-        weather.getCurrentCondition().setHumidity(getInt("humidity", jMain));
-        weather.getCurrentCondition().setPressure(getInt("pressure", jMain));
-        weather.getTemperature().setMaxTemp(getFloat("temp_max", jMain));
-        weather.getTemperature().setMinTemp(getFloat("temp_min", jMain));
-        weather.getTemperature().setTemp(getFloat("temp", jMain));
-
-        //Getting the location:
+        //getting location:
+        JSONObject jCoord = getObject("coord", jNow);
         Location location = new Location();
-        JSONObject jCoordinates = getObject("coord", jObj);
-        location.setLatitude(getFloat("lat", jCoordinates));
-        location.setLongitude(getFloat("lon", jCoordinates));
-        JSONObject jSys = getObject("sys", jObj);
-        location.setCountry(getString("country", jSys));
-        location.setCity(getString("name", jObj));
-        weather.setLocation(location);
+        location.setLatitude(getFloat("lat",jCoord));
+        location.setLongitude(getFloat("lon",jCoord));
+        JSONObject jSys = getObject("sys",jNow);
+        location.setCountry(getString("country",jSys));
+        location.setCity(getString("name",jNow));
+        cityWeather.setLocation(location);
 
-        return weather;
+        //getting weather for today:
+        JSONObject jWeatherToday = getObject("weather", jNow);
+        Weather weatherToday = new Weather();
+        LocalDate dateToday = new LocalDate();
+        weatherToday.setDate(dateToday);
+        weatherToday.getCurrentCondition().setWeatherId(getInt("id",jWeatherToday));
+        weatherToday.getCurrentCondition().setCondition(getString("main",jWeatherToday));
+        weatherToday.getCurrentCondition().setDescription(getString("description",jWeatherToday));
+
+        //getting temperature, pressure and humidity for today:
+        JSONObject jMain = getObject("main", jNow);
+        weatherToday.getTemperature().setTempNow(getFloat("temp",jMain));
+        weatherToday.getTemperature().setMinTemp(getFloat("temp_min",jMain));
+        weatherToday.getTemperature().setMaxTemp(getFloat("temp_max",jMain));
+        weatherToday.getCurrentCondition().setPressure(getFloat("pressure",jMain));
+        weatherToday.getCurrentCondition().setHumidity(getInt("humidity",jMain));
+
+        //setting the weather built as the first weather of cityWeather (weather today):
+        cityWeather.addWeather(weatherToday);
+
+        //Getting the weather forecast for 16 days:
+        //Transforming data in JSONObject:
+        JSONObject jForecast = new JSONObject(weatherForecastData);
+
+        //Getting the list of weather measurements:
+        JSONArray jList = jForecast.getJSONArray("list");
+        //Starting at i = 1, to get the forecast for the next day and on:
+        for (int i = 1; i < jList.length(); i++) {
+            JSONObject row = jList.getJSONObject(i);
+            Weather weather = new Weather();
+
+            //getting date for this weather:
+            LocalDate date = new LocalDate(dateToday);
+            date.plusDays(i);
+            weather.setDate(date);
+
+            //getting temperature:
+            JSONObject jTemp = row.getJSONObject("temp");
+            Temperature temperature = weather.getTemperature();
+            temperature.setDay(getFloat("day",jTemp));
+            temperature.setMinTemp(getFloat("min",jTemp));
+            temperature.setMaxTemp(getFloat("max",jTemp));
+            temperature.setNight(getFloat("night",jTemp));
+            temperature.setEvening(getFloat("eve",jTemp));
+            temperature.setMorning(getFloat("morn",jTemp));
+
+            //getting pressure:
+            CurrentCondition currentCondition = weather.getCurrentCondition();
+            currentCondition.setPressure(getFloat("pressure",row));
+
+            //getting humidity:
+            currentCondition.setHumidity(getInt("humidity",row));
+
+            //getting weather description:
+            JSONObject jWeather = row.getJSONObject("weather");
+            currentCondition.setCondition(getString("main",jWeather));
+            currentCondition.setDescription(getString("description",jWeather));
+            currentCondition.setWeatherId(getInt("id",jWeather));
+            //todo:
+            //set icon
+
+            cityWeather.addWeather(weather);
+        }
+
+        return cityWeather;
     }
 
     private static JSONObject getObject(String tagName, JSONObject jObj) throws JSONException {
@@ -65,4 +118,7 @@ public class JSONWeatherParser {
         return jObj.getInt(tagName);
     }
 
+    private static long getLong(String tagName, JSONObject jObj) throws JSONException {
+        return jObj.getLong(tagName);
+    }
 }

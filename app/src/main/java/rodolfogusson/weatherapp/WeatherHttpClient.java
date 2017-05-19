@@ -12,16 +12,25 @@ import java.net.URL;
  */
 
 public class WeatherHttpClient {
-    private static String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    private static String WEATHER_NOW_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    private static String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
     private static String API_KEY = "&APPID=8b9c6bf78f81b388955fb1ebaa4cdff2";
 
-    public String getWeatherData(String location) {
+    public String getWeatherNow(String location){
+        return getWeatherData(location, WEATHER_NOW_BASE_URL,"");
+    }
+
+    public String getWeatherForecast(String location, int count){
+        return getWeatherData(location, FORECAST_BASE_URL,"&cnt="+count);
+    }
+
+    public String getWeatherData(String location, String baseURL, String countSuffix) {
         HttpURLConnection con = null;
         InputStream is = null;
 
         try {
-            con = (HttpURLConnection) (new URL(BASE_URL + location + API_KEY)).openConnection();
+            con = (HttpURLConnection) (new URL(baseURL + location + countSuffix + API_KEY)).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
             con.setDoOutput(true);

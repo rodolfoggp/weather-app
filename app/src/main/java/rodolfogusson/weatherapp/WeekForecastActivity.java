@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
+import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
 
 public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse{
 
-    Weather weather;
+    CityWeather cityWeather;
     TextView city_tv, descr_tv, temp_tv;
 
     @Override
@@ -29,7 +32,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
 
         city_tv = (TextView) findViewById(R.id.city_text);
         descr_tv = (TextView) findViewById(R.id.description);
-        temp_tv = (TextView) findViewById(R.id.temp);
+        temp_tv = (TextView) findViewById(R.id.tempNow);
 
         WeatherRequestTask task = new WeatherRequestTask(this);
         task.execute(city);
@@ -38,7 +41,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     protected void onResume() {
         super.onResume();
-        if(weather!=null){
+        if(cityWeather!=null){
             fillData();
         }
     }
@@ -62,14 +65,14 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     }
 
     private void fillData(){
-        city_tv.setText(weather.getLocation().getCity());
+        /*city_tv.setText(weather.getLocation().getCity());
         descr_tv.setText(weather.getCurrentCondition().getDescription());
-        temp_tv.setText(String.valueOf(weather.getTemperature().getTemp()));
+        temp_tv.setText(String.valueOf(weather.getTemperature().getTempNow()));*/
     }
 
     @Override
-    public void processFinish(Weather output) {
-        weather = output;
+    public void processFinish(CityWeather output) {
+        cityWeather = output;
         fillData();
     }
 }

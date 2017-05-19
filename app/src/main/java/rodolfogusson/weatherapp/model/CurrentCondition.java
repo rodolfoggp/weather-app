@@ -5,7 +5,8 @@ package rodolfogusson.weatherapp.model;
  */
 
 public class CurrentCondition {
-    private int weatherId, humidity, pressure;
+    private int weatherId, humidity;
+    private float pressure;
     private String description;
     private String condition;
 
@@ -27,11 +28,11 @@ public class CurrentCondition {
         this.humidity = humidity;
     }
 
-    public int getPressure() {
+    public float getPressure() {
         return pressure;
     }
 
-    public void setPressure(int pressure) {
+    public void setPressure(float pressure) {
         this.pressure = pressure;
     }
 
