@@ -24,6 +24,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
 
     CityWeather cityWeather;
     TextView city_tv, descr_tv, temp_tv;
+    String city, country;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +41,17 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     protected void onResume() {
         super.onResume();
+        //TODO: get from settings
+        city = "Trevi";
+        country = "IT";
 
-        String city = "Trevi,IT";
+        //show weather stored in database for the selected city:
+        cityWeather = DBHelper.getInstance(this).findCityWeather(city, country);
+        fillData();
+
+        //request updated weather online:
         WeatherRequestTask task = new WeatherRequestTask(this);
-        task.execute(city);
-
-        if(cityWeather!=null){
-            fillData();
-        }
+        task.execute(city+","+country);
     }
 
     @Override
@@ -61,16 +65,15 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //TODO: Remove
             DBHelper.getInstance(this).cleanDB();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private void fillData(){
-        cityWeather = DBHelper.getInstance(this).findCityWeather("Trevi", "IT");
-        if(!cityWeather.getWeatherList().isEmpty()){
+        if(cityWeather!=null && !cityWeather.getWeatherList().isEmpty()){
             Weather weather = cityWeather.getWeatherAt(0);
             city_tv.setText(cityWeather.getLocation().getCity());
             descr_tv.setText(weather.getCurrentCondition().getDescription());
