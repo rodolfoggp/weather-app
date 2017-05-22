@@ -5,13 +5,14 @@ package rodolfogusson.weatherapp.model;
  */
 
 public class Temperature {
-    float tempNow, minTemp, maxTemp, morning, day, evening, night;
+    private Float tempNow;
+    private float minTemp, maxTemp, morning, day, evening, night;
 
-    public float getTempNow() {
+    public Float getTempNow() {
         return tempNow;
     }
 
-    public void setTempNow(float tempNow) {
+    public void setTempNow(Float tempNow) {
         this.tempNow = tempNow;
     }
 

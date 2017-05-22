@@ -1,5 +1,6 @@
 package rodolfogusson.weatherapp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,15 +8,21 @@ import java.util.List;
  */
 
 public class CityWeather {
+    private long id;
     private Location location;
-    List<Weather> weatherList;
+    private List<Weather> weatherList;
 
-    public List<Weather> getWeatherList() {
-        return weatherList;
+    public CityWeather(){
+        weatherList = new ArrayList<>();
+        location = new Location();
     }
 
-    public void setWeatherList(List<Weather> weatherList) {
-        this.weatherList = weatherList;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Location getLocation() {
@@ -28,5 +35,17 @@ public class CityWeather {
 
     public void addWeather(Weather weather){
         weatherList.add(weather);
+    }
+
+    public Weather getWeatherAt(int index){
+        return weatherList.get(index);
+    }
+
+    public List<Weather> getWeatherList() {
+        return weatherList;
+    }
+
+    public void setWeatherList(List<Weather> weatherList) {
+        this.weatherList = weatherList;
     }
 }

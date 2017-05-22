@@ -1,10 +1,12 @@
 package rodolfogusson.weatherapp;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
+import rodolfogusson.weatherapp.persistance.DBHelper;
 
 public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse{
 
@@ -28,19 +31,20 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         setContentView(R.layout.activity_week_forecast);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String city = "Rome,IT";
 
         city_tv = (TextView) findViewById(R.id.city_text);
         descr_tv = (TextView) findViewById(R.id.description);
         temp_tv = (TextView) findViewById(R.id.tempNow);
-
-        WeatherRequestTask task = new WeatherRequestTask(this);
-        task.execute(city);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        String city = "Trevi,IT";
+        WeatherRequestTask task = new WeatherRequestTask(this);
+        task.execute(city);
+
         if(cityWeather!=null){
             fillData();
         }
@@ -55,9 +59,9 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            DBHelper.getInstance(this).cleanDB();
             return true;
         }
 
@@ -65,14 +69,20 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     }
 
     private void fillData(){
-        /*city_tv.setText(weather.getLocation().getCity());
-        descr_tv.setText(weather.getCurrentCondition().getDescription());
-        temp_tv.setText(String.valueOf(weather.getTemperature().getTempNow()));*/
+        cityWeather = DBHelper.getInstance(this).findCityWeather("Trevi", "IT");
+        if(!cityWeather.getWeatherList().isEmpty()){
+            Weather weather = cityWeather.getWeatherAt(0);
+            city_tv.setText(cityWeather.getLocation().getCity());
+            descr_tv.setText(weather.getCurrentCondition().getDescription());
+            temp_tv.setText(String.valueOf(weather.getTemperature().getTempNow()));
+        }
     }
 
     @Override
     public void processFinish(CityWeather output) {
         cityWeather = output;
+        DBHelper helper = DBHelper.getInstance(this);
+        helper.save(cityWeather);
         fillData();
     }
 }
