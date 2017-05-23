@@ -1,5 +1,6 @@
 package rodolfogusson.weatherapp;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -124,6 +125,7 @@ public class SearcheableActivity extends AppCompatActivity {
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SearcheableActivity.this);
                     prefs.edit().putString(getString(R.string.key_location),
                             ((TextView)v).getText().toString()).apply();
+                    ((Activity)context).finish();
                 }
             });
         }

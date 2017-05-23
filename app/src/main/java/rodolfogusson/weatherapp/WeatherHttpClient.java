@@ -15,7 +15,7 @@ public class WeatherHttpClient {
     private static String WEATHER_NOW_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private static String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
-    private static String API_KEY = "&APPID=8b9c6bf78f81b388955fb1ebaa4cdff2";
+    private static String API_KEY = "APPID=";
 
     public String getWeatherNow(String location){
         return getWeatherData(location, WEATHER_NOW_BASE_URL,"");
@@ -30,7 +30,7 @@ public class WeatherHttpClient {
         InputStream is = null;
 
         try {
-            con = (HttpURLConnection) (new URL(baseURL + location + countSuffix + API_KEY)).openConnection();
+            con = (HttpURLConnection) (new URL(baseURL + location + countSuffix +"&"+ API_KEY)).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
             con.setDoOutput(true);

@@ -7,8 +7,7 @@
 
         <Preference
             android:key="@string/key_location"
-            android:title="Location"
-            android:summary="@string/location_summary"/>
+            android:title="Location" />
 
         <android.support.v7.preference.ListPreference
             android:key="@string/key_unit"

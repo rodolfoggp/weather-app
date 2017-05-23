@@ -1,11 +1,13 @@
 package rodolfogusson.weatherapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import rodolfogusson.weatherapp.model.CityWeather;
@@ -42,9 +46,10 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     protected void onResume() {
         super.onResume();
-        //TODO: get from settings
-        city = "Trevi";
-        country = "IT";
+
+        List<String> cityAndCountry = getCityAndCountryFromPreferences();
+        city = cityAndCountry.get(0);
+        country = cityAndCountry.get(1);
 
         //show weather stored in database for the selected city:
         cityWeather = DBHelper.getInstance(this).findCityWeather(city, country);
@@ -80,6 +85,13 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             descr_tv.setText(weather.getCurrentCondition().getDescription());
             temp_tv.setText(String.valueOf(weather.getTemperature().getTempNow()));
         }
+    }
+
+    private List<String> getCityAndCountryFromPreferences(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String location = prefs.getString(getString(R.string.key_location),null);
+        String[] parts = location.split(", ");
+        return new ArrayList<>(Arrays.asList(parts));
     }
 
     @Override
