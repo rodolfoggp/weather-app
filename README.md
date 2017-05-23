@@ -11,7 +11,7 @@ Para conseguir usar o aplicativo, deve-se preencher a constante "API_KEY", em We
 ## Informações de Desenvolvimento
 Este projeto foi feito usando linguagem nativa JAVA e a IDE Android Studio.  
   
-A modelagem dos dados foi feita tendo em vista a resposta da API da openweather: 
+A modelagem dos dados foi feita tendo em vista a resposta da API da openweather:  
 -A classe CityWeather representa o clima de uma cidade e guarda um identificador, a localização da cidade e uma lista de informações de clima(Weather) para esta cidade;  
 -A classe Weather representa uma informação de clima com data, condição do clima e temperatura.  
   
