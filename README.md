@@ -1,88 +1,28 @@
-# Project Title
+# Weather App
 
-One Paragraph of project description goes here
+Aplicativo Android feito com o objetivo de buscar informações de clima pela API do openweather.
 
-## Getting Started
+## Informações de Uso do Aplicativo
+O aplicativo requisita da API openweather informações de clima (16 dias) para a cidade escolhida na tela de preferências.
+Atualmente o aplicativo só mostra a temperatura(em Kelvin) e condição do clima atual.
+Ao clicar nas opções no canto superior direito da Activity principal, e em seguida em Settings, a tela de preferências é aberta, onde o usuário poderá escolher a cidade(atualmente a lista só possui três cidades) e a unidade da temperatura desejada(ainda não implementado).
+O aplicativo funciona em modo offline, persistindo os últimos dados lidos de cada cidade e mostrando-os na tela principal quando não for possível buscá-los na internet.
+Para conseguir usar o aplicativo, deve-se preencher a constante "API_KEY", em WeatherHttpClient.java com uma APPID válida para a API do openweather. Futuramente, o aplicativo conseguirá ler uma APPID de um arquivo.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Informações de Desenvolvimento
+Este projeto foi feito usando linguagem nativa JAVA e a IDE Android Studio.
 
-### Prerequisites
+A modelagem dos dados foi feita tendo em vista a resposta da API da openweather: 
+-A classe CityWeather representa o clima de uma cidade e guarda um identificador, a localização da cidade e uma lista de informações de clima(Weather) para esta cidade;
+-A classe Weather representa uma informação de clima com data, condição do clima e temperatura.
 
-What things you need to install the software and how to install them
+A persistência de dados foi feita através de banco de dados, usando SQLite.
+Há uma tabela "cities" para se guardar referências para as cidades já buscadas, e uma tabela "weathers" onde se guardam as informações de clima para todas as cidades já buscadas.
 
-```
-Give examples
-```
+O aplicativo guarda as configurações feitas na tela Settings por meio de SharedPreferences.
 
-### Installing
+A interface ainda não mostra todas as informações pedidas. Esta será implementada totalmente na próxima versão.
 
-A step by step series of examples that tell you have to get a development env running
+## Autor
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
+* **Rodolfo Gusson** - (https://github.com/rodolfoggp)
