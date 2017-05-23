@@ -15,7 +15,7 @@ public class WeatherHttpClient {
     private static String WEATHER_NOW_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private static String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
-    private static String API_KEY = "APPID=";
+    private static String API_KEY = "";
 
     public String getWeatherNow(String location){
         return getWeatherData(location, WEATHER_NOW_BASE_URL,"");

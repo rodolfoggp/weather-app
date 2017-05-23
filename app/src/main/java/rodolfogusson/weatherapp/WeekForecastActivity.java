@@ -48,6 +48,12 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         super.onResume();
 
         List<String> cityAndCountry = getCityAndCountryFromPreferences();
+        if(cityAndCountry==null){
+            //temporary code to have an initial city and country:
+            cityAndCountry = new ArrayList<>();
+            cityAndCountry.add("Vitoria");
+            cityAndCountry.add("BR");
+        }
         city = cityAndCountry.get(0);
         country = cityAndCountry.get(1);
 
@@ -90,8 +96,12 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     private List<String> getCityAndCountryFromPreferences(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String location = prefs.getString(getString(R.string.key_location),null);
-        String[] parts = location.split(", ");
-        return new ArrayList<>(Arrays.asList(parts));
+        if(location!=null){
+            String[] parts = location.split(", ");
+            return new ArrayList<>(Arrays.asList(parts));
+        }else{
+            return null;
+        }
     }
 
     @Override
