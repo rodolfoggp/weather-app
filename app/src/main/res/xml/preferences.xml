@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Settings">
+
+        <Preference
+            android:key="@string/key_location"
+            android:title="Location"
+            android:summary="@string/location_summary"/>
+
+        <android.support.v7.preference.ListPreference
+            android:key="@string/key_unit"
+            android:title="Unit"
+            android:entries="@array/units"
+            android:summary="@string/unit_summary"
+            android:entryValues="@array/units_values"
+            android:defaultValue="Celsius" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

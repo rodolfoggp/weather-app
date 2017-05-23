@@ -1,5 +1,6 @@
 package rodolfogusson.weatherapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -65,8 +66,8 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //TODO: Remove
-            DBHelper.getInstance(this).cleanDB();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
