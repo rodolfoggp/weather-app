@@ -1,5 +1,6 @@
 package rodolfogusson.weatherapp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
@@ -21,9 +22,9 @@ public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
 
     @Override
     protected CityWeather doInBackground(String... params) {
-        CityWeather cityWeather = new CityWeather();
-        String weatherNowData = ( (new WeatherHttpClient()).getWeatherNow(params[0]));
-        String weatherForecastData = ( (new WeatherHttpClient()).getWeatherForecast(params[0], 16));
+        CityWeather cityWeather = null;
+        String weatherNowData = ( (new WeatherHttpClient((Context) callback)).getWeatherNow(params[0]));
+        String weatherForecastData = ( (new WeatherHttpClient((Context) callback).getWeatherForecast(params[0], 16)));
         try {
             cityWeather = JSONWeatherParser.getCityWeather(weatherNowData, weatherForecastData);
             //Getting the icon:

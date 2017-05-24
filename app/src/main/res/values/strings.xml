@@ -6,5 +6,9 @@
 
     <string name="key_unit">unit</string>
     <string name="key_location">location</string>
+    <string name="key_api_key">api_key</string>
+    <string name="key_is_first_run">first_run</string>
     <string name="unit_summary">%s</string>
+
+    <string name="error_getting_data">Error getting data from openweather</string>
 </resources>

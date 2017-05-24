@@ -18,8 +18,9 @@ import rodolfogusson.weatherapp.model.Weather;
 public class JSONWeatherParser {
 
     public static CityWeather getCityWeather(String weatherNowData, String weatherForecastData) throws JSONException{
-        CityWeather cityWeather = new CityWeather();
+        CityWeather cityWeather = null;
         if(weatherNowData != null && weatherForecastData != null){
+            cityWeather = new CityWeather();
             //Getting the weather info for now:
             //Transforming data in JSONObject:
             JSONObject jNow = new JSONObject(weatherNowData);

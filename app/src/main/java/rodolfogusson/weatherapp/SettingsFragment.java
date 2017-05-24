@@ -11,8 +11,8 @@ import android.support.v7.preference.PreferenceManager;
  * Created by rodolfo on 5/22/17.
  */
 
-public class SettingsFragment extends PreferenceFragmentCompat {
-    Preference location;
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+    Preference location, apiKey;
     SharedPreferences spf;
 
     @Override
@@ -31,12 +31,39 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+
+        //API Key preference:
+        apiKey = findPreference(getString(R.string.key_api_key));
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+
         String locationStr = spf.getString(getString(R.string.key_location),null);
         location.setSummary(locationStr);
+        String apikeyStr = spf.getString(getString(R.string.key_api_key),null);
+        apiKey.setSummary(apikeyStr);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        updatePreference(findPreference(key), key);
+    }
+
+    private void updatePreference(Preference preference, String key) {
+        if (preference == null) return;
+        preference.setSummary(spf.getString(key,null));
     }
 }

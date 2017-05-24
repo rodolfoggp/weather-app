@@ -110,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             db.setTransactionSuccessful();
         }finally{
-            cursor.close();
+            closeCursor(cursor);
             db.endTransaction();
         }
         if(!list.isEmpty()){

@@ -17,6 +17,11 @@
             android:entryValues="@array/units_values"
             android:defaultValue="Celsius" />
 
+        <android.support.v7.preference.EditTextPreference
+            android:key="@string/key_api_key"
+            android:title="API Key"
+            android:defaultValue=""/>
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
