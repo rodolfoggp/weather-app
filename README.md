@@ -2,16 +2,16 @@
 Aplicativo Android feito com o objetivo de buscar informações de clima pela API do openweather.  
 
 ## Informações de Uso do Aplicativo
-O aplicativo requisita da API openweather informações de clima (16 dias) para a cidade escolhida na tela de preferências.
+O aplicativo requisita da API Openweather informações de clima (16 dias) para a cidade escolhida na tela de preferências.
 Atualmente o aplicativo só mostra a temperatura(em Kelvin) e condição do clima atual.  
 Ao clicar nas opções no canto superior direito da Activity principal, e em seguida em Settings, a tela de preferências é aberta, onde o usuário poderá escolher a cidade(atualmente a lista só possui três cidades) e a unidade da temperatura desejada(ainda não implementado).  
 O aplicativo funciona em modo offline, persistindo os últimos dados lidos de cada cidade e mostrando-os na tela principal quando não for possível buscá-los na internet.  
-Para conseguir usar o aplicativo, deve-se preencher a constante "API_KEY", em WeatherHttpClient.java com uma APPID válida para a API do openweather. Futuramente, o aplicativo conseguirá ler uma APPID de um arquivo.  
+Para conseguir usar o aplicativo, deve-se preencher a "API Key" com uma chave válida do OpenWeather, na tela Settings. 
   
 ## Informações de Desenvolvimento
 Este projeto foi feito usando linguagem nativa JAVA e a IDE Android Studio.  
   
-A modelagem dos dados foi feita tendo em vista a resposta da API da openweather:  
+A modelagem dos dados foi feita tendo em vista a resposta da API da OpenWeather:  
 -A classe CityWeather representa o clima de uma cidade e guarda um identificador, a localização da cidade e uma lista de informações de clima(Weather) para esta cidade;  
 -A classe Weather representa uma informação de clima com data, condição do clima e temperatura.  
   
