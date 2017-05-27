@@ -21,11 +21,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearcheableActivity extends AppCompatActivity {
+import rodolfogusson.weatherapp.communication.CityRequestTask;
+
+public class SearcheableActivity extends AppCompatActivity implements CityRequestTask.AsyncResponse{
 
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
-    ArrayList<String> list;
+    RecyclerViewAdapter adapter;
+    List<String> list;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,11 +35,7 @@ public class SearcheableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_searcheable);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         list = new ArrayList<>();
-        list.add("Vitoria, BR");
-        list.add("Prague, CZ");
-        list.add("New York, US");
 
         adapter = new RecyclerViewAdapter(this,list);
         recyclerView.setAdapter(adapter);
@@ -56,15 +54,17 @@ public class SearcheableActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                CityRequestTask task = new CityRequestTask(SearcheableActivity.this);
+                task.execute(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<String> filteredList = filter(list, newText);
+                /*List<String> filteredList = filter(list, newText);
                 adapter = new RecyclerViewAdapter(SearcheableActivity.this,filteredList);
                 recyclerView.swapAdapter(adapter, false);
-                recyclerView.scrollToPosition(0);
+                recyclerView.scrollToPosition(0);*/
                 return false;
             }
         });
@@ -83,6 +83,12 @@ public class SearcheableActivity extends AppCompatActivity {
         return filteredList;
     }
 
+    @Override
+    public void processFinish(List<String> output) {
+        list = output;
+        adapter.updateList(list);
+    }
+
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
         List<String> values;
         Context context;
@@ -92,6 +98,11 @@ public class SearcheableActivity extends AppCompatActivity {
         RecyclerViewAdapter(Context context1, List<String> values1){
             values = values1;
             context = context1;
+        }
+
+        public void updateList(List<String> data) {
+            values = data;
+            notifyDataSetChanged();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder{

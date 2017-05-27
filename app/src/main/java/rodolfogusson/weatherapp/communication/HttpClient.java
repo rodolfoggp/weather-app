@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.communication;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,36 +11,38 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import rodolfogusson.weatherapp.R;
+
 /**
  * Created by rodolfo on 5/17/17.
  */
 
-public class WeatherHttpClient {
+class HttpClient {
     private static String WEATHER_NOW_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private static String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
+    private static String CITIES_BASE_URL = "http://api.openweathermap.org/data/2.5/find?q=";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
     private static String apiKey = "";
     private static String APP_ID_SUFFIX = "&APPID=";
 
-    public WeatherHttpClient(Context context){
+    HttpClient(Context context){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         apiKey = prefs.getString(context.getString(R.string.key_api_key),null);
     }
 
-    public String getWeatherNow(String location){
+    String getWeatherNow(String location){
         return getWeatherData(location, WEATHER_NOW_BASE_URL,"");
     }
 
-    public String getWeatherForecast(String location, int count){
+    String getWeatherForecast(String location, int count){
         return getWeatherData(location, FORECAST_BASE_URL,"&cnt="+count);
     }
 
-    public String getWeatherData(String location, String baseURL, String countSuffix) {
+    private String requestData(String url){
         HttpURLConnection con = null;
         InputStream is = null;
-
         try {
-            con = (HttpURLConnection) (new URL(baseURL + location + countSuffix + APP_ID_SUFFIX + apiKey)).openConnection();
+            con = (HttpURLConnection) (new URL(url)).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
             int responseCode = con.getResponseCode(); //can call this instead of con.connect()
@@ -70,6 +72,14 @@ public class WeatherHttpClient {
             }
         }
         return null;
+    }
+
+    private String getWeatherData(String location, String baseURL, String countSuffix) {
+        return requestData(baseURL + location + countSuffix + APP_ID_SUFFIX + apiKey);
+    }
+
+    String getCitiesData(String cityNamePattern){
+        return requestData(CITIES_BASE_URL + cityNamePattern + "&type=like" + APP_ID_SUFFIX + apiKey);
     }
 
     public byte[] getImage(String code) {

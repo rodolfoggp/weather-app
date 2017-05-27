@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.communication;
 
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
@@ -15,7 +15,7 @@ import rodolfogusson.weatherapp.model.Weather;
  * Created by rodolfo on 5/16/17.
  */
 
-public class JSONWeatherParser {
+public class JSONWeatherParser extends JSONParser{
 
     public static CityWeather getCityWeather(String weatherNowData, String weatherForecastData) throws JSONException{
         CityWeather cityWeather = null;
@@ -103,26 +103,5 @@ public class JSONWeatherParser {
             }
         }
         return cityWeather;
-    }
-
-    private static JSONObject getObject(String tagName, JSONObject jObj) throws JSONException {
-        JSONObject subObj = jObj.getJSONObject(tagName);
-        return subObj;
-    }
-
-    private static String getString(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getString(tagName);
-    }
-
-    private static float getFloat(String tagName, JSONObject jObj) throws JSONException {
-        return (float) jObj.getDouble(tagName);
-    }
-
-    private static int getInt(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getInt(tagName);
-    }
-
-    private static long getLong(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getLong(tagName);
     }
 }

@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.communication;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 
 import rodolfogusson.weatherapp.model.CityWeather;
-import rodolfogusson.weatherapp.model.Weather;
 
 /**
  * Created by rodolfo on 5/17/17.
@@ -23,12 +22,12 @@ public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
     @Override
     protected CityWeather doInBackground(String... params) {
         CityWeather cityWeather = null;
-        String weatherNowData = ( (new WeatherHttpClient((Context) callback)).getWeatherNow(params[0]));
-        String weatherForecastData = ( (new WeatherHttpClient((Context) callback).getWeatherForecast(params[0], 16)));
+        String weatherNowData = ( (new HttpClient((Context) callback)).getWeatherNow(params[0]));
+        String weatherForecastData = ( (new HttpClient((Context) callback).getWeatherForecast(params[0], 16)));
         try {
             cityWeather = JSONWeatherParser.getCityWeather(weatherNowData, weatherForecastData);
             //Getting the icon:
-            //weather.setIcon( (new WeatherHttpClient()).getImage(weather.getCurrentCondition().getIconCode()));
+            //weather.setIcon( (new HttpClient()).getImage(weather.getCurrentCondition().getIconCode()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
