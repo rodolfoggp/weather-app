@@ -93,7 +93,9 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             Weather weather = cityWeather.getWeatherAt(0);
             city_tv.setText(cityWeather.getLocation().getCity());
             descr_tv.setText(weather.getCurrentCondition().getDescription());
-            temp_tv.setText(String.valueOf(weather.getTemperature().getTempNow()));
+            LayoutUtils utils = LayoutUtils.getInstance().init(this);
+            Integer temp = utils.getConvertedTemperature(weather.getTemperature().getTempNow());
+            temp_tv.setText(String.valueOf(temp));
         }
     }
 
@@ -113,6 +115,9 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         cityWeather = output;
         if(cityWeather!=null){
             DBHelper helper = DBHelper.getInstance(this);
+            /*//get rid of old data:
+            helper.deleteAllFor(cityWeather);*/
+            //save the new retrieved data:
             helper.save(cityWeather);
             fillData();
         }else{

@@ -1,5 +1,7 @@
 package rodolfogusson.weatherapp.model;
 
+import android.util.Log;
+
 import org.joda.time.LocalDate;
 
 /**
@@ -38,5 +40,12 @@ public class Weather {
 
     public void setTemperature(Temperature temperature) {
         this.temperature = temperature;
+    }
+
+    public void print(){
+        Log.d("DATE: ",date.toString());
+        Log.d("CONDITION: ",currentCondition.getCondition());
+        Log.d("DESCRIPTION: ",currentCondition.getDescription());
+        Log.d("TEMPERATURE: ",temperature.toString());
     }
 }

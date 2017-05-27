@@ -11,4 +11,8 @@
     <string name="unit_summary">%s</string>
 
     <string name="error_getting_data">Error getting data from openweather</string>
+
+    //Unit Strings:
+    <string name="celsius">Celsius</string>
+    <string name="fahrenheit">Fahrenheit</string>
 </resources>

@@ -121,13 +121,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<Weather> findWeathersFor(long locationID){
         db = getReadableDatabase();
-        String query = "SELECT * FROM " + WEATHERS_TABLE;
-                /*+ " WHERE " + LOCATION_ID + "=?";*/
+        String query = "SELECT * FROM " + WEATHERS_TABLE
+                + " WHERE " + LOCATION_ID + "=?";
         List<Weather> list = new ArrayList<>();
         db.beginTransaction();
         Cursor cursor = null;
         try{
-            cursor = db.rawQuery(query, /*new String[]{String.valueOf(locationID)}*/null);
+            cursor = db.rawQuery(query, new String[]{String.valueOf(locationID)});
             while(cursor.moveToNext()){
                 WeatherDeserializer deserializer = new WeatherDeserializer();
                 Weather weather = deserializer.deserialize(cursor);
@@ -149,7 +149,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean save(CityWeather cityWeather){
         ContentValues values = CityWeatherSerializer.serialize(cityWeather);
-        boolean operationWasSuccessful = true;
+        boolean operationWasSuccessful;
         db.beginTransaction();
         try{
             CityWeather cityWeatherOnDB = findCityWeather(cityWeather.getLocation().getCity(),
@@ -157,9 +157,8 @@ public class DBHelper extends SQLiteOpenHelper {
             if(cityWeatherOnDB != null){ //if there is already data about this city on DB:
                 long id = cityWeatherOnDB.getId();
                 String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE " + LOCATION_ID + " =?";
-                //Cleaning all old data about the city in question:
+                //Cleaning all old weather data about the city in question:
                 db.execSQL(query, new String[]{String.valueOf(id)});
-                //Updating the entry in DB about this city:
                 long row = db.update(CITIES_TABLE, values, _ID+"="+id,null);
                 if(row != -1){
                     operationWasSuccessful = saveWeathers(cityWeather, row);
@@ -228,4 +227,6 @@ public class DBHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+
 }
