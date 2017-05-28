@@ -51,23 +51,22 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
 
         verifyApiKey();
 
+        //TODO:
+        //test if city and country are set on preferences.
+        //if not, locate the city the user is in.
         List<String> cityAndCountry = getCityAndCountryFromPreferences();
-        if(cityAndCountry==null){
-            //temporary code to have an initial city and country:
-            cityAndCountry = new ArrayList<>();
-            cityAndCountry.add("Vitoria");
-            cityAndCountry.add("BR");
+        if(cityAndCountry!=null){
+            city = cityAndCountry.get(0);
+            country = cityAndCountry.get(1);
+
+            //show weather stored in database for the selected city:
+            cityWeather = DBHelper.getInstance(this).findCityWeather(city, country);
+            fillData();
+
+            //request updated weather online:
+            WeatherRequestTask task = new WeatherRequestTask(this);
+            task.execute(city+","+country);
         }
-        city = cityAndCountry.get(0);
-        country = cityAndCountry.get(1);
-
-        //show weather stored in database for the selected city:
-        cityWeather = DBHelper.getInstance(this).findCityWeather(city, country);
-        fillData();
-
-        //request updated weather online:
-        WeatherRequestTask task = new WeatherRequestTask(this);
-        task.execute(city+","+country);
     }
 
     @Override

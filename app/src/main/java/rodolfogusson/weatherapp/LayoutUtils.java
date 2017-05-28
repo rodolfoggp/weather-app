@@ -43,6 +43,7 @@ public class LayoutUtils {
         return null;
     }
 
-    /*public int getTemperatureNow(){
+    /*public int getTemperatureNow(String city, String country){
+
     }*/
 }
