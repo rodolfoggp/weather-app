@@ -28,10 +28,12 @@ public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
         String weatherForecastData = ( (new HttpClient((Context) callback).getWeatherForecast(params[0], 16)));
         try {
             cityWeather = JSONWeatherParser.getCityWeather(weatherNowData, weatherForecastData);
-            //Getting the icons:
-            for(Weather weather : cityWeather.getWeatherList()){
-                Bitmap icon = (new HttpClient((Context) callback)).getImage(weather.getCurrentCondition().getIconCode());
-                weather.setIcon(icon);
+            if(cityWeather != null){
+                //Getting the icons:
+                for(Weather weather : cityWeather.getWeatherList()){
+                    Bitmap icon = (new HttpClient((Context) callback)).getImage(weather.getCurrentCondition().getIconCode());
+                    weather.setIcon(icon);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

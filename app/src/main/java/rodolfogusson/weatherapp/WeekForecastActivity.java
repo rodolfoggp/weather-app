@@ -15,9 +15,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import rodolfogusson.weatherapp.communication.CityRequestTask;
+import rodolfogusson.weatherapp.communication.HttpClient;
 import rodolfogusson.weatherapp.communication.WeatherRequestTask;
 import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
@@ -123,7 +126,10 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             LayoutUtils utils = LayoutUtils.getInstance().init(this);
             Integer temp = utils.getConvertedTemperature(weather.getTemperature().getTempNow());
             temp_tv.setText(String.valueOf(temp));
-            weather_today_img.setImageBitmap(weather.getIcon());
+            //weather_today_img.setImageBitmap(weather.getIcon());
+
+            String url = HttpClient.IMG_URL+weather.getCurrentCondition().getIconCode()+".png";
+            Picasso.with(this).load(url).into(weather_today_img);
         }
     }
 
