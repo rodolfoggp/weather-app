@@ -7,7 +7,8 @@
 
         <Preference
             android:key="@string/key_location"
-            android:title="Location" />
+            android:title="Location"
+            android:defaultValue="@string/current_location"/>
 
         <android.support.v7.preference.ListPreference
             android:key="@string/key_unit"
@@ -19,8 +20,7 @@
 
         <android.support.v7.preference.EditTextPreference
             android:key="@string/key_api_key"
-            android:title="API Key"
-            android:defaultValue=""/>
+            android:title="API Key" />
 
     </android.support.v7.preference.PreferenceCategory>
 

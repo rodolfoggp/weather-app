@@ -21,6 +21,7 @@ class HttpClient {
     private static String WEATHER_NOW_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private static String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
     private static String CITIES_BASE_URL = "http://api.openweathermap.org/data/2.5/find?q=";
+    private static String LAT_LON_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?";
     private static String IMG_URL = "http://openweathermap.org/img/w/";
     private static String apiKey = "";
     private static String APP_ID_SUFFIX = "&APPID=";
@@ -80,6 +81,13 @@ class HttpClient {
 
     String getCitiesData(String cityNamePattern){
         return requestData(CITIES_BASE_URL + cityNamePattern + "&type=like" + APP_ID_SUFFIX + apiKey);
+    }
+
+    String getLatLonData(String lat, String lon){
+        return requestData(LAT_LON_BASE_URL +
+                "lat=" + Double.parseDouble(lat) +
+                "&lon=" + Double.parseDouble(lon) +
+                APP_ID_SUFFIX + apiKey);
     }
 
     public byte[] getImage(String code) {

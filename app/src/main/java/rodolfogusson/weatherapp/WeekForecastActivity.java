@@ -3,7 +3,6 @@ package rodolfogusson.weatherapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -14,22 +13,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import rodolfogusson.weatherapp.communication.CityRequestTask;
 import rodolfogusson.weatherapp.communication.WeatherRequestTask;
 import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
 import rodolfogusson.weatherapp.persistance.DBHelper;
 
-public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse{
+public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse, CityRequestTask.AsyncResponse{
 
     CityWeather cityWeather;
     TextView city_tv, descr_tv, temp_tv;
-    String city, country;
     SharedPreferences prefs;
     boolean isFirstRun;
+    boolean gettingResultsFromActivity = false;
+
+    private double currentLatitude;
+    private double currentLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,24 +49,48 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     protected void onResume() {
         super.onResume();
+        if(!gettingResultsFromActivity){
+            getAndDisplayData();
+        }else{
+            gettingResultsFromActivity = false;
+        }
+        /*
+        if(!AppUtils.isNetworkAvailable(this)){
+            //Show warning: no internet!
+        }*/
+    }
 
-        verifyApiKey();
+    private void getAndDisplayData(){
+        if(isAPIKeySet()){
+            String location = prefs.getString(getString(R.string.key_location),getString(R.string.current_location));
+            String currentLocation = getString(R.string.current_location);
+            String cityAndCountry;
+            if(location.equals(currentLocation)){
+                //Using current location of the device:
+                //get the last city used by the app:
+                cityAndCountry = prefs.getString(getString(R.string.key_last_location),null);
+                //show weather stored in database for the selected city:
+                showWeatherDataInDBFor(cityAndCountry);
+                //get current latitude and longitude and get weather data for them:
+                gettingResultsFromActivity = true;
+                Intent intent = new Intent(this, GPSTrackerActivity.class);
+                startActivityForResult(intent,1);
+            }else{
+                //Using city set in preferences:
+                cityAndCountry = prefs.getString(getString(R.string.key_location),null);
+                //show weather stored in database for the selected city:
+                showWeatherDataInDBFor(cityAndCountry);
+                //request updated weather online:
+                WeatherRequestTask task = new WeatherRequestTask(this);
+                task.execute(cityAndCountry);
+            }
+        }
+    }
 
-        //TODO:
-        //test if city and country are set on preferences.
-        //if not, locate the city the user is in.
-        List<String> cityAndCountry = getCityAndCountryFromPreferences();
-        if(cityAndCountry!=null){
-            city = cityAndCountry.get(0);
-            country = cityAndCountry.get(1);
-
-            //show weather stored in database for the selected city:
-            cityWeather = DBHelper.getInstance(this).findCityWeather(city, country);
+    private void showWeatherDataInDBFor(String cityAndCountry){
+        if(cityAndCountry != null){
+            cityWeather = DBHelper.getInstance(this).findCityWeather(cityAndCountry);
             fillData();
-
-            //request updated weather online:
-            WeatherRequestTask task = new WeatherRequestTask(this);
-            task.execute(city+","+country);
         }
     }
 
@@ -78,7 +103,6 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -98,24 +122,64 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         }
     }
 
-    private List<String> getCityAndCountryFromPreferences(){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = prefs.getString(getString(R.string.key_location),null);
-        if(location!=null){
-            String[] parts = location.split(", ");
-            return new ArrayList<>(Arrays.asList(parts));
+    private boolean isAPIKeySet(){
+        String apiKey = prefs.getString(getString(R.string.key_api_key),null);
+        if(apiKey == null || apiKey.isEmpty() && isFirstRun){
+            isFirstRun = false;
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder.setTitle("API Key not set")
+                    .setMessage("This app needs a valid Openweather API Key to work, please set a valid key in the Settings screen")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            prefs.edit().putBoolean(getString(R.string.key_is_first_run), isFirstRun).apply();
+            return false;
         }else{
-            return null;
+            return true;
         }
     }
 
+    /**
+     * When we get latitude and longitude from gps:
+     */
     @Override
-    public void processFinish(CityWeather output) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            Bundle extras = data.getExtras();
+            currentLongitude = extras.getDouble("Longitude");
+            currentLatitude = extras.getDouble("Latitude");
+            //fetch the city that has these coordinates:
+            CityRequestTask task = new CityRequestTask(this);
+            task.execute(String.valueOf(currentLatitude),String.valueOf(currentLongitude));
+        }
+    }
+
+    /**
+     * When we get the city with given coordinates:
+     */
+    @Override
+    public void onCityRetrieved(List<String> output) {
+        //This list will only have one city:
+        String cityAndCountry = output.get(0);
+        //Save it as the last city used by the app:
+        prefs.edit().putString(getString(R.string.key_last_location),
+                cityAndCountry).apply();
+        //request updated weather online:
+        WeatherRequestTask task = new WeatherRequestTask(this);
+        task.execute(cityAndCountry);
+    }
+
+    @Override
+    public void onCityWeatherRetrieved(CityWeather output) {
         cityWeather = output;
         if(cityWeather!=null){
             DBHelper helper = DBHelper.getInstance(this);
-            /*//get rid of old data:
-            helper.deleteAllFor(cityWeather);*/
             //save the new retrieved data:
             helper.save(cityWeather);
             fillData();
@@ -123,29 +187,6 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             Snackbar.make(findViewById(R.id.coordinator_layout),
                     getString(R.string.error_getting_data),
                     Snackbar.LENGTH_LONG).show();
-        }
-    }
-
-    private void verifyApiKey(){
-        String apiKey = prefs.getString(getString(R.string.key_api_key),null);
-        if(apiKey == null || apiKey.isEmpty() && isFirstRun){
-            isFirstRun = false;
-            AlertDialog.Builder builder;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-            } else {
-                builder = new AlertDialog.Builder(this);
-            }
-            builder.setTitle("API Key not set")
-                    .setMessage("This app needs a valid Openweather API Key to work, please set a valid key in the Settings screen")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            prefs.edit().putBoolean(getString(R.string.key_is_first_run), isFirstRun).apply();
         }
     }
 }

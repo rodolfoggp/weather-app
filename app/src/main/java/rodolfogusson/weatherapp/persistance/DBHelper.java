@@ -94,7 +94,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public CityWeather findCityWeather(String city, String country){
+    public CityWeather findCityWeather(String cityAndCountry){
+        String[] parts = cityAndCountry.split(", ");
+        String city = parts[0];
+        String country = parts[1];
         db = getReadableDatabase();
         String query = "SELECT * FROM " + CITIES_TABLE +
                 " WHERE " + COUNTRY + "=? " +
@@ -153,8 +156,9 @@ public class DBHelper extends SQLiteOpenHelper {
         boolean operationWasSuccessful;
         db.beginTransaction();
         try{
-            CityWeather cityWeatherOnDB = findCityWeather(cityWeather.getLocation().getCity(),
-                    cityWeather.getLocation().getCountry());
+            CityWeather cityWeatherOnDB = findCityWeather(
+                            cityWeather.getLocation().getCity() +
+                            ", " + cityWeather.getLocation().getCountry());
             if(cityWeatherOnDB != null){ //if there is already data about this city on DB:
                 long id = cityWeatherOnDB.getId();
                 String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE " + LOCATION_ID + " =?";

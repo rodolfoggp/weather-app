@@ -8,8 +8,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rodolfogusson.weatherapp.model.CityWeather;
-
 /**
  * Created by rodolfo on 5/17/17.
  */
@@ -25,7 +23,14 @@ public class CityRequestTask extends AsyncTask<String, Void, List<String>>{
     @Override
     protected List<String> doInBackground(String... params) {
         List<String> cities = new ArrayList<>();
-        String citiesData = ( (new HttpClient((Context) callback)).getCitiesData(params[0]));
+        String citiesData;
+        if(params.length > 1){
+            //search for latitude and longitude
+            citiesData = ( (new HttpClient((Context) callback)).getLatLonData(params[0], params[1]));
+        }else{
+            //search for city name pattern
+            citiesData = ( (new HttpClient((Context) callback)).getCitiesData(params[0]));
+        }
         try {
             cities = JSONCityParser.getCitiesList(citiesData);
         } catch (JSONException e) {
@@ -35,11 +40,11 @@ public class CityRequestTask extends AsyncTask<String, Void, List<String>>{
     }
 
     public interface AsyncResponse{
-        void processFinish(List<String> output);
+        void onCityRetrieved(List<String> output);
     }
 
     @Override
     protected void onPostExecute(List<String> cities) {
-        callback.processFinish(cities);
+        callback.onCityRetrieved(cities);
     }
 }

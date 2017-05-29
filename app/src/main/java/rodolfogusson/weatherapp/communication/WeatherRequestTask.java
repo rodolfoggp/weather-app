@@ -35,11 +35,11 @@ public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
     }
 
     public interface AsyncResponse{
-        void processFinish(CityWeather output);
+        void onCityWeatherRetrieved(CityWeather output);
     }
 
     @Override
     protected void onPostExecute(CityWeather cityWeather) {
-        callback.processFinish(cityWeather);
+        callback.onCityWeatherRetrieved(cityWeather);
     }
 }

@@ -3,11 +3,14 @@
     <string name="action_settings">Settings</string>
     <string name="units">Units</string>
     <string name="search_hint">Enter your city</string>
+    <string name="current_location">Current location</string>
 
     <string name="key_unit">unit</string>
     <string name="key_location">location</string>
     <string name="key_api_key">api_key</string>
     <string name="key_is_first_run">first_run</string>
+    <string name="key_last_location">last_location</string>
+
     <string name="unit_summary">%s</string>
 
     <string name="error_getting_data">Error getting data from openweather</string>

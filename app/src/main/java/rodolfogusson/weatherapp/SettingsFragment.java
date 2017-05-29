@@ -26,7 +26,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         location.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getContext(), SearcheableActivity.class);
+                Intent intent = new Intent(getContext(), SearchCityActivity.class);
                 startActivity(intent);
                 return true;
             }

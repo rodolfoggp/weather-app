@@ -1,9 +1,6 @@
 package rodolfogusson.weatherapp;
 
-import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,7 +19,7 @@ import java.util.List;
 
 import rodolfogusson.weatherapp.communication.CityRequestTask;
 
-public class SearcheableActivity extends AppCompatActivity implements CityRequestTask.AsyncResponse{
+public class SearchCityActivity extends AppCompatActivity implements CityRequestTask.AsyncResponse{
 
     RecyclerView recyclerView;
     RecyclerViewAdapter adapter;
@@ -36,13 +32,14 @@ public class SearcheableActivity extends AppCompatActivity implements CityReques
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         list = new ArrayList<>();
-
         adapter = new RecyclerViewAdapter(this,list);
         recyclerView.setAdapter(adapter);
-        recyclerView.setOnClickListener(new View.OnClickListener() {
+        TextView auto = (TextView) findViewById(R.id.auto_location);
+        auto.setText(getString(R.string.current_location));
+        auto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setLocation(v);
             }
         });
     }
@@ -54,39 +51,30 @@ public class SearcheableActivity extends AppCompatActivity implements CityReques
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                CityRequestTask task = new CityRequestTask(SearcheableActivity.this);
+                CityRequestTask task = new CityRequestTask(SearchCityActivity.this);
                 task.execute(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                /*List<String> filteredList = filter(list, newText);
-                adapter = new RecyclerViewAdapter(SearcheableActivity.this,filteredList);
-                recyclerView.swapAdapter(adapter, false);
-                recyclerView.scrollToPosition(0);*/
                 return false;
             }
         });
         return true;
     }
 
-    private static List<String> filter(List<String> dataList, String query) {
-        final String lowerCaseQuery = query.toLowerCase();
-        final List<String> filteredList = new ArrayList<>();
-        for (String text : dataList) {
-            String lowerCaseText = text.toLowerCase();
-            if (lowerCaseText.contains(lowerCaseQuery)) {
-                filteredList.add(text);
-            }
-        }
-        return filteredList;
-    }
-
     @Override
-    public void processFinish(List<String> output) {
+    public void onCityRetrieved(List<String> output) {
         list = output;
         adapter.updateList(list);
+    }
+
+    private void setLocation(View v){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SearchCityActivity.this);
+        prefs.edit().putString(getString(R.string.key_location),
+                ((TextView)v).getText().toString()).apply();
+        (SearchCityActivity.this).finish();
     }
 
     class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
@@ -126,10 +114,7 @@ public class SearcheableActivity extends AppCompatActivity implements CityReques
             holder.textView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SearcheableActivity.this);
-                    prefs.edit().putString(getString(R.string.key_location),
-                            ((TextView)v).getText().toString()).apply();
-                    ((Activity)context).finish();
+                    setLocation(v);
                 }
             });
         }

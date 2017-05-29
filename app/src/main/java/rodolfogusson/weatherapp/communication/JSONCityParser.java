@@ -19,19 +19,36 @@ class JSONCityParser extends JSONParser{
             //Transforming data in JSONObject:
             JSONObject jNow = new JSONObject(citiesData);
 
-            //Getting list of cities structures:
-            JSONArray jCitiesArray = jNow.getJSONArray("list");
-            for (int i = 0; i < jCitiesArray.length(); i++) {
-                JSONObject row = jCitiesArray.getJSONObject(i);
-                String city = getString("name",row);
-                JSONObject jSys = getObject("sys",row);
-                String country = getString("country",jSys);
-                String countryAndCity = city + ", " + country;
-                if(!cities.contains(countryAndCity)){ //to avoid getting repeated city names on the list
-                    cities.add(countryAndCity);
+            if(jNow.has("list")){
+                /*
+                * This means that we are looking for cities using a city name pattern.
+                * The json that openweather answers back has a "list" tag in that case.
+                * */
+                //Getting list of cities structures:
+                JSONArray jCitiesArray = jNow.getJSONArray("list");
+                for (int i = 0; i < jCitiesArray.length(); i++) {
+                    JSONObject row = jCitiesArray.getJSONObject(i);
+                    String cityAndCountry = getCityAndCountry(row);
+                    if(!cities.contains(cityAndCountry)){ //to avoid getting repeated city names on the list
+                        cities.add(cityAndCountry);
+                    }
                 }
+            }else{
+                /*
+                * In this case, we are looking for a single city, using coordinates.
+                * The structure of the json is a little different than the previous case.
+                * */
+                String cityAndCountry = getCityAndCountry(jNow);
+                cities.add(cityAndCountry);
             }
         }
         return cities;
+    }
+
+    static private String getCityAndCountry(JSONObject obj) throws JSONException{
+        String city = getString("name",obj);
+        JSONObject jSys = getObject("sys",obj);
+        String country = getString("country",jSys);
+        return city + ", " + country;
     }
 }
