@@ -2,10 +2,15 @@ package rodolfogusson.weatherapp.communication;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.preference.PreferenceManager;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -25,8 +30,10 @@ class HttpClient {
     private static String IMG_URL = "http://openweathermap.org/img/w/";
     private static String apiKey = "";
     private static String APP_ID_SUFFIX = "&APPID=";
+    Context context;
 
-    HttpClient(Context context){
+    HttpClient(Context ctx){
+        this.context = ctx;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         apiKey = prefs.getString(context.getString(R.string.key_api_key),null);
     }
@@ -46,9 +53,9 @@ class HttpClient {
             con = (HttpURLConnection) (new URL(url)).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
-            int responseCode = con.getResponseCode(); //can call this instead of con.connect()
+            int responseCode = con.getResponseCode();
             if (responseCode >= 400 && responseCode <= 499) {
-                throw new Exception("Bad authentication status: " + responseCode); //provide a more meaningful exception message
+                throw new Exception("Bad authentication status: " + responseCode);
             } else {
                 StringBuffer buffer = new StringBuffer();
                 is = con.getInputStream();
@@ -90,25 +97,35 @@ class HttpClient {
                 APP_ID_SUFFIX + apiKey);
     }
 
-    public byte[] getImage(String code) {
-        HttpURLConnection con = null;
+    public Bitmap getImage(String code) {
+        Bitmap img = null;
+        try {
+            img = Picasso.with(context).load(IMG_URL + code + ".png").get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
+        /*HttpURLConnection con = null;
         InputStream is = null;
         try {
-            con = (HttpURLConnection) (new URL(IMG_URL + code + apiKey)).openConnection();
+            con = (HttpURLConnection) (new URL(IMG_URL + code + ".png"*//* + APP_ID_SUFFIX + apiKey*//*)).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
             con.setDoOutput(true);
-            con.connect();
+            int responseCode = con.getResponseCode();
+            if (responseCode >= 400 && responseCode <= 499) {
+                throw new Exception("Bad authentication status: " + responseCode);
+            } else {
+                // Let's read the response
+                is = con.getInputStream();
+                byte[] buffer = new byte[1024];
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            // Let's read the response
-            is = con.getInputStream();
-            byte[] buffer = new byte[1024];
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                while (is.read(buffer) != -1)
+                    baos.write(buffer);
 
-            while (is.read(buffer) != -1)
-                baos.write(buffer);
-
-            return baos.toByteArray();
+                return baos.toByteArray();
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
@@ -121,6 +138,6 @@ class HttpClient {
             } catch (Throwable t) {
             }
         }
-        return null;
+        return null;*/
     }
 }

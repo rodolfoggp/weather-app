@@ -3,6 +3,7 @@ package rodolfogusson.weatherapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
 
     CityWeather cityWeather;
     TextView city_tv, descr_tv, temp_tv;
+    ImageView weather_today_img;
     SharedPreferences prefs;
     boolean isFirstRun;
     boolean gettingResultsFromActivity = false;
@@ -39,9 +42,10 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        city_tv = (TextView) findViewById(R.id.city_text);
-        descr_tv = (TextView) findViewById(R.id.description);
-        temp_tv = (TextView) findViewById(R.id.tempNow);
+        /*city_tv = (TextView) findViewById(R.id.city_text);
+        descr_tv = (TextView) findViewById(R.id.description);*/
+        temp_tv = (TextView) findViewById(R.id.temp_now);
+        weather_today_img = (ImageView) findViewById(R.id.weather_today_img);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstRun = prefs.getBoolean(getString(R.string.key_is_first_run), true);
     }
@@ -114,11 +118,12 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     private void fillData(){
         if(cityWeather!=null && !cityWeather.getWeatherList().isEmpty()){
             Weather weather = cityWeather.getWeatherAt(0);
-            city_tv.setText(cityWeather.getLocation().getCity());
-            descr_tv.setText(weather.getCurrentCondition().getDescription());
+            /*city_tv.setText(cityWeather.getLocation().getCity());
+            descr_tv.setText(weather.getCurrentCondition().getDescription());*/
             LayoutUtils utils = LayoutUtils.getInstance().init(this);
             Integer temp = utils.getConvertedTemperature(weather.getTemperature().getTempNow());
             temp_tv.setText(String.valueOf(temp));
+            weather_today_img.setImageBitmap(weather.getIcon());
         }
     }
 

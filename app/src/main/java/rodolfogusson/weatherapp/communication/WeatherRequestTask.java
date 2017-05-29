@@ -1,11 +1,13 @@
 package rodolfogusson.weatherapp.communication;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
 
 import rodolfogusson.weatherapp.model.CityWeather;
+import rodolfogusson.weatherapp.model.Weather;
 
 /**
  * Created by rodolfo on 5/17/17.
@@ -26,8 +28,11 @@ public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
         String weatherForecastData = ( (new HttpClient((Context) callback).getWeatherForecast(params[0], 16)));
         try {
             cityWeather = JSONWeatherParser.getCityWeather(weatherNowData, weatherForecastData);
-            //Getting the icon:
-            //weather.setIcon( (new HttpClient()).getImage(weather.getCurrentCondition().getIconCode()));
+            //Getting the icons:
+            for(Weather weather : cityWeather.getWeatherList()){
+                Bitmap icon = (new HttpClient((Context) callback)).getImage(weather.getCurrentCondition().getIconCode());
+                weather.setIcon(icon);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

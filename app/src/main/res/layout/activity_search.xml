@@ -13,8 +13,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_gravity="center"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:src="@drawable/ic_location"/>
         <include android:id="@+id/auto_location"
             layout="@layout/simple_search_item"/>

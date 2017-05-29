@@ -44,6 +44,7 @@ public class JSONWeatherParser extends JSONParser{
             weatherToday.getCurrentCondition().setWeatherId(getInt("id",jWeatherToday));
             weatherToday.getCurrentCondition().setCondition(getString("main",jWeatherToday));
             weatherToday.getCurrentCondition().setDescription(getString("description",jWeatherToday));
+            weatherToday.getCurrentCondition().setIconCode(getString("icon",jWeatherToday));
 
             //getting temperature, pressure and humidity for today:
             JSONObject jMain = getObject("main", jNow);
@@ -96,8 +97,7 @@ public class JSONWeatherParser extends JSONParser{
                 currentCondition.setCondition(getString("main",jWeather));
                 currentCondition.setDescription(getString("description",jWeather));
                 currentCondition.setWeatherId(getInt("id",jWeather));
-                //todo:
-                //set icon
+                currentCondition.setIconCode(getString("icon",jWeatherToday));
 
                 cityWeather.addWeather(weather);
             }

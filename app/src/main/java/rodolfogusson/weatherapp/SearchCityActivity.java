@@ -2,11 +2,13 @@ package rodolfogusson.weatherapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,7 +30,7 @@ public class SearchCityActivity extends AppCompatActivity implements CityRequest
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searcheable);
+        setContentView(R.layout.activity_search);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         list = new ArrayList<>();
@@ -47,7 +49,16 @@ public class SearchCityActivity extends AppCompatActivity implements CityRequest
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+         actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.setIconifiedByDefault(false);
+        searchView.requestFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

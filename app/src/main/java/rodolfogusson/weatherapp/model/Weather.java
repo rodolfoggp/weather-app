@@ -1,6 +1,6 @@
 package rodolfogusson.weatherapp.model;
 
-import android.util.Log;
+import android.graphics.Bitmap;
 
 import org.joda.time.LocalDate;
 
@@ -12,6 +12,7 @@ public class Weather {
     private LocalDate date;
     private CurrentCondition currentCondition;
     private Temperature temperature;
+    private Bitmap icon;
 
     public Weather(){
         currentCondition = new CurrentCondition();
@@ -42,10 +43,11 @@ public class Weather {
         this.temperature = temperature;
     }
 
-    public void print(){
-        Log.d("DATE: ",date.toString());
-        Log.d("CONDITION: ",currentCondition.getCondition());
-        Log.d("DESCRIPTION: ",currentCondition.getDescription());
-        Log.d("TEMPERATURE: ",temperature.toString());
+    public Bitmap getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Bitmap icon) {
+        this.icon = icon;
     }
 }

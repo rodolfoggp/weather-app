@@ -30,16 +30,8 @@
         <activity
             android:name=".SettingsActivity"
             android:theme="@style/SettingsTheme" />
-        <activity android:name=".SearchCityActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-        <activity android:name=".GPSTrackerActivity"></activity>
+        <activity android:name=".SearchCityActivity"/>
+        <activity android:name=".GPSTrackerActivity"/>
     </application>
 
 </manifest>

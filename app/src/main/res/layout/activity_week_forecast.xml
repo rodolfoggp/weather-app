@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,8 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="rodolfogusson.weatherapp.WeekForecastActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context="rodolfogusson.weatherapp.WeekForecastActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -26,38 +27,104 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <TextView
-            android:id="@+id/city_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/outer_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardElevation="4dp"
+                card_view:cardCornerRadius="3dp">
 
-        <TextView
-            android:id="@+id/tempNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-        <TextView
-            android:id="@+id/press"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                    <!--Temperature Now / High and Low Block-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/humidity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                        <ImageView
+                            android:id="@+id/weather_today_img"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_location"
+                            android:layout_gravity="center"/>
 
-        <!--<android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@android:drawable/ic_dialog_email" />-->
+                        <TextView
+                            android:id="@+id/temp_now"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="70sp"
+                            android:paddingStart="16dp"
+
+                            android:text="26ºC"/>
+
+                        <!--<LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="left|center"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="10dp">
+
+                            <TextView
+                                android:id="@+id/temp_high"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+
+                                android:text="High: 28ºC"/>
+
+                            <TextView
+                                android:id="@+id/temp_low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+
+                                android:text="Low: 24ºC"/>
+
+                        </LinearLayout>-->
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/day_of_the_week"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <!--<TextView
+                        android:id="@+id/city_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/pressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />-->
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
