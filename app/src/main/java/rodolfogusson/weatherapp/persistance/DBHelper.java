@@ -28,7 +28,7 @@ import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherCo
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String FOREIGN_KEYS_ON = "PRAGMA foreign_keys=ON;";
 
     private static DBHelper instance;
@@ -77,6 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "pressure real," +
                 "description text," +
                 "condition text," +
+                "icon_code text," +
                 "temp_now real," +
                 "min_temp real," +
                 "max_temp real," +
@@ -84,6 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "day real," +
                 "evening real," +
                 "night real," +
+                "icon blob," +
                 "foreign key(location_id) references " +
                 CITIES_TABLE + "(_id)" +
                 ");");
@@ -91,7 +93,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        cleanDB();
+        onCreate(db);
     }
 
     public CityWeather findCityWeather(String cityAndCountry){

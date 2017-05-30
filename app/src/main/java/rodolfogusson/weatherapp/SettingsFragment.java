@@ -16,6 +16,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     SharedPreferences spf;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
+    }
+
+    @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences);
 
@@ -43,7 +49,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
 
-        String locationStr = spf.getString(getString(R.string.key_location),null);
+        String locationStr = spf.getString(getString(R.string.key_location),getString(R.string.current_location));
         location.setSummary(locationStr);
         String apikeyStr = spf.getString(getString(R.string.key_api_key),null);
         apiKey.setSummary(apikeyStr);

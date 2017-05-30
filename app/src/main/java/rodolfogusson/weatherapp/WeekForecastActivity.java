@@ -3,7 +3,6 @@ package rodolfogusson.weatherapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -15,12 +14,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Locale;
 
 import rodolfogusson.weatherapp.communication.CityRequestTask;
-import rodolfogusson.weatherapp.communication.HttpClient;
 import rodolfogusson.weatherapp.communication.WeatherRequestTask;
 import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
@@ -29,7 +28,7 @@ import rodolfogusson.weatherapp.persistance.DBHelper;
 public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse, CityRequestTask.AsyncResponse{
 
     CityWeather cityWeather;
-    TextView city_tv, descr_tv, temp_tv;
+    TextView city_and_day_tv, descr_tv, temp_tv, temp_high_tv, temp_low_tv;
     ImageView weather_today_img;
     SharedPreferences prefs;
     boolean isFirstRun;
@@ -45,9 +44,11 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*city_tv = (TextView) findViewById(R.id.city_text);
-        descr_tv = (TextView) findViewById(R.id.description);*/
+        city_and_day_tv = (TextView) findViewById(R.id.city_and_day);
+        descr_tv = (TextView) findViewById(R.id.description);
         temp_tv = (TextView) findViewById(R.id.temp_now);
+        temp_high_tv = (TextView) findViewById(R.id.temp_high);
+        temp_low_tv = (TextView) findViewById(R.id.temp_low);
         weather_today_img = (ImageView) findViewById(R.id.weather_today_img);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstRun = prefs.getBoolean(getString(R.string.key_is_first_run), true);
@@ -94,6 +95,27 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         }
     }
 
+    private void fillData(){
+        if(cityWeather!=null && !cityWeather.getWeatherList().isEmpty()){
+            //Filling data for the weather now card:
+            Weather weather = cityWeather.getWeatherAt(0);
+            city_and_day_tv.setText(
+                    cityWeather.getLocation().getCity()
+                    + ", " + cityWeather.getLocation().getCountry()
+                    + " - "
+                    + new DateTime().dayOfWeek().getAsText(Locale.getDefault()));
+            descr_tv.setText(weather.getCurrentCondition().getDescription());
+            LayoutUtils utils = LayoutUtils.getInstance().init(this);
+            String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getTempNow());
+            temp_tv.setText(temp);
+            String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp());
+            String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp());
+            temp_high_tv.setText("High: " + max_temp);
+            temp_low_tv.setText("Low: " + min_temp);
+            weather_today_img.setImageBitmap(weather.getIcon());
+        }
+    }
+
     private void showWeatherDataInDBFor(String cityAndCountry){
         if(cityAndCountry != null){
             cityWeather = DBHelper.getInstance(this).findCityWeather(cityAndCountry);
@@ -116,21 +138,6 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void fillData(){
-        if(cityWeather!=null && !cityWeather.getWeatherList().isEmpty()){
-            Weather weather = cityWeather.getWeatherAt(0);
-            /*city_tv.setText(cityWeather.getLocation().getCity());
-            descr_tv.setText(weather.getCurrentCondition().getDescription());*/
-            LayoutUtils utils = LayoutUtils.getInstance().init(this);
-            Integer temp = utils.getConvertedTemperature(weather.getTemperature().getTempNow());
-            temp_tv.setText(String.valueOf(temp));
-            //weather_today_img.setImageBitmap(weather.getIcon());
-
-            String url = HttpClient.IMG_URL+weather.getCurrentCondition().getIconCode()+".png";
-            Picasso.with(this).load(url).into(weather_today_img);
-        }
     }
 
     private boolean isAPIKeySet(){

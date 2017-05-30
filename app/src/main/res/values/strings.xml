@@ -5,6 +5,10 @@
     <string name="search_hint">Enter your city</string>
     <string name="current_location">Current location</string>
 
+
+    <string name="celsius_unit">ºC</string>
+    <string name="fahrenheit_unit">ºF</string>
+
     <string name="key_unit">unit</string>
     <string name="key_location">location</string>
     <string name="key_api_key">api_key</string>

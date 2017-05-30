@@ -27,6 +27,7 @@ public class CityWeatherContract {
         public static final String PRESSURE = "pressure";
         public static final String DESCRIPTION = "description";
         public static final String CONDITION = "condition";
+        public static final String ICON_CODE = "icon_code";
         public static final String TEMP_NOW = "temp_now";
         public static final String MIN_TEMP = "min_temp";
         public static final String MAX_TEMP = "max_temp";
@@ -34,6 +35,7 @@ public class CityWeatherContract {
         public static final String DAY = "day";
         public static final String EVENING = "evening";
         public static final String NIGHT = "night";
+        public static final String ICON = "icon";
     }
 
     //prevents instantiation of this class:

@@ -1,6 +1,9 @@
 package rodolfogusson.weatherapp.persistance;
 
 import android.content.ContentValues;
+import android.graphics.Bitmap;
+
+import java.io.ByteArrayOutputStream;
 
 import rodolfogusson.weatherapp.model.Weather;
 
@@ -10,6 +13,8 @@ import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherCo
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DESCRIPTION;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.EVENING;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.HUMIDITY;
+import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.ICON;
+import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.ICON_CODE;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.LOCATION_ID;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MAX_TEMP;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MIN_TEMP;
@@ -35,6 +40,7 @@ public class WeatherSerializer {
         values.put(PRESSURE,weather.getCurrentCondition().getPressure());
         values.put(DESCRIPTION,weather.getCurrentCondition().getDescription());
         values.put(CONDITION,weather.getCurrentCondition().getCondition());
+        values.put(ICON_CODE,weather.getCurrentCondition().getIconCode());
         values.put(TEMP_NOW,weather.getTemperature().getTempNow());
         values.put(MIN_TEMP,weather.getTemperature().getMinTemp());
         values.put(MAX_TEMP,weather.getTemperature().getMaxTemp());
@@ -42,6 +48,11 @@ public class WeatherSerializer {
         values.put(DAY,weather.getTemperature().getDay());
         values.put(EVENING,weather.getTemperature().getEvening());
         values.put(NIGHT,weather.getTemperature().getNight());
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        weather.getIcon().compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        values.put(ICON,byteArray);
         return values;
     }
 }

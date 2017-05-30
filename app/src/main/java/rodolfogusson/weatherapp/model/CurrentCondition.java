@@ -9,6 +9,7 @@ public class CurrentCondition {
     private float pressure;
     private String description;
     private String condition;
+    private String iconCode;
 
     public String getIconCode() {
         return iconCode;
@@ -17,8 +18,6 @@ public class CurrentCondition {
     public void setIconCode(String iconCode) {
         this.iconCode = iconCode;
     }
-
-    private String iconCode;
 
     public int getHumidity() {
         return humidity;

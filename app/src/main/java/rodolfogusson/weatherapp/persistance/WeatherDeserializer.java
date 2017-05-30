@@ -1,6 +1,8 @@
 package rodolfogusson.weatherapp.persistance;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.joda.time.LocalDate;
 
@@ -12,6 +14,7 @@ import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherCo
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DESCRIPTION;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.EVENING;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.HUMIDITY;
+import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.ICON;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MAX_TEMP;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MIN_TEMP;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MORNING;
@@ -43,6 +46,7 @@ public class WeatherDeserializer {
         weather.getTemperature().setDay(readDay(cursor));
         weather.getTemperature().setEvening(readEvening(cursor));
         weather.getTemperature().setNight(readNight(cursor));
+        weather.setIcon(readIcon(cursor));
         return weather;
     }
 
@@ -109,5 +113,11 @@ public class WeatherDeserializer {
     private float readNight(Cursor cursor){
         int i = cursor.getColumnIndex(NIGHT);
         return cursor.getFloat(i);
+    }
+
+    private Bitmap readIcon(Cursor cursor){
+        int i = cursor.getColumnIndex(ICON);
+        byte[] image = cursor.getBlob(i);
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }

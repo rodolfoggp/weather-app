@@ -11,8 +11,6 @@ import android.preference.PreferenceManager;
 public class LayoutUtils {
 
     private static LayoutUtils instance = null;
-
-    private static String selectedUnit;
     private static SharedPreferences spf;
     private Context context;
 
@@ -31,17 +29,33 @@ public class LayoutUtils {
         return this;
     }
 
-    public Integer getConvertedTemperature(float kelvinTemp){
+    public String getConvertedTemperatureWithUnit(float kelvinTemp){
         String selectedUnit = spf.getString(context.getString(R.string.key_unit),null);
         if(selectedUnit!=null){
             if(selectedUnit.equals(context.getString(R.string.celsius))){
-                return (int) (kelvinTemp - 273.15);
+                return ((int) (kelvinTemp - 273.15)) + context.getString(R.string.celsius_unit);
             }else if(selectedUnit.equals(context.getString(R.string.fahrenheit))){
-                return (int) ((kelvinTemp * 9/5) - 459.67);
+                return ((int) ((kelvinTemp * 9/5) - 459.67)) + context.getString(R.string.fahrenheit_unit);
             }
         }
         return null;
     }
+
+    public String getConvertedTemperature(float kelvinTemp){
+        String selectedUnit = spf.getString(context.getString(R.string.key_unit),null);
+        if(selectedUnit!=null){
+            if(selectedUnit.equals(context.getString(R.string.celsius))){
+                return String.valueOf((int) (kelvinTemp - 273.15));
+            }else if(selectedUnit.equals(context.getString(R.string.fahrenheit))){
+                return String.valueOf((int) ((kelvinTemp * 9/5) - 459.67));
+            }
+        }
+        return null;
+    }
+
+    /*public String getUnitText(){
+
+    }*/
 
     /*public int getTemperatureNow(String city, String country){
 
