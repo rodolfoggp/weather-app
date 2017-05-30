@@ -39,7 +39,8 @@ public class JSONWeatherParser extends JSONParser{
             JSONArray jWeatherArray = jNow.getJSONArray("weather");
             JSONObject jWeatherToday = jWeatherArray.getJSONObject(0);
             Weather weatherToday = new Weather();
-            LocalDate dateToday = new LocalDate();
+            long dt = jNow.getLong("dt");
+            LocalDate dateToday = new LocalDate(dt);
             weatherToday.setDate(dateToday);
             weatherToday.getCurrentCondition().setWeatherId(getInt("id",jWeatherToday));
             weatherToday.getCurrentCondition().setCondition(getString("main",jWeatherToday));
@@ -49,8 +50,6 @@ public class JSONWeatherParser extends JSONParser{
             //getting temperature, pressure and humidity for today:
             JSONObject jMain = getObject("main", jNow);
             weatherToday.getTemperature().setTempNow(getFloat("temp",jMain));
-            weatherToday.getTemperature().setMinTemp(getFloat("temp_min",jMain));
-            weatherToday.getTemperature().setMaxTemp(getFloat("temp_max",jMain));
             weatherToday.getCurrentCondition().setPressure(getFloat("pressure",jMain));
             weatherToday.getCurrentCondition().setHumidity(getInt("humidity",jMain));
 
@@ -63,6 +62,14 @@ public class JSONWeatherParser extends JSONParser{
 
             //Getting the list of weather measurements:
             JSONArray jList = jForecast.getJSONArray("list");
+
+            /* max and min temperatures for today are taken from the first element of
+             * the list in weatherForecastData:
+             */
+            JSONObject jTempToday = jList.getJSONObject(0).getJSONObject("temp");
+            weatherToday.getTemperature().setMinTemp(getFloat("min",jTempToday));
+            weatherToday.getTemperature().setMaxTemp(getFloat("max",jTempToday));
+
             //Starting at i = 1, to get the forecast for the next day and on:
             for (int i = 1; i < jList.length(); i++) {
                 JSONObject row = jList.getJSONObject(i);

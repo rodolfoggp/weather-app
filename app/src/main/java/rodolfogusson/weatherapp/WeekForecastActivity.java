@@ -3,6 +3,7 @@ package rodolfogusson.weatherapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,14 +60,26 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     protected void onResume() {
         super.onResume();
         if(!gettingResultsFromActivity){
+            //ensures that we are only working with up-to-date weather data:
+            DBHelper.getInstance(this).removeExpiredWeathers();
             getAndDisplayData();
         }else{
             gettingResultsFromActivity = false;
         }
-        /*
         if(!AppUtils.isNetworkAvailable(this)){
             //Show warning: no internet!
-        }*/
+            final Snackbar snack = Snackbar.make(findViewById(R.id.coordinator_layout),
+                    getString(R.string.error_no_internet),
+                    Snackbar.LENGTH_INDEFINITE);
+            snack.setActionTextColor(Color.WHITE).setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snack.dismiss();
+                        }
+                    });
+            snack.getView().setBackgroundColor(Color.RED);
+            snack.show();
+        }
     }
 
     private void getAndDisplayData(){
@@ -95,7 +109,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         }
     }
 
-    private void fillData(){
+    private void fillWeatherNowData(){
         if(cityWeather!=null && !cityWeather.getWeatherList().isEmpty()){
             //Filling data for the weather now card:
             Weather weather = cityWeather.getWeatherAt(0);
@@ -106,7 +120,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
                     + new DateTime().dayOfWeek().getAsText(Locale.getDefault()));
             descr_tv.setText(weather.getCurrentCondition().getDescription());
             LayoutUtils utils = LayoutUtils.getInstance().init(this);
-            String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getTempNow());
+            String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow());
             temp_tv.setText(temp);
             String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp());
             String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp());
@@ -119,7 +133,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     private void showWeatherDataInDBFor(String cityAndCountry){
         if(cityAndCountry != null){
             cityWeather = DBHelper.getInstance(this).findCityWeather(cityAndCountry);
-            fillData();
+            fillWeatherNowData();
         }
     }
 
@@ -183,14 +197,16 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
      */
     @Override
     public void onCityRetrieved(List<String> output) {
-        //This list will only have one city:
-        String cityAndCountry = output.get(0);
-        //Save it as the last city used by the app:
-        prefs.edit().putString(getString(R.string.key_last_location),
-                cityAndCountry).apply();
-        //request updated weather online:
-        WeatherRequestTask task = new WeatherRequestTask(this);
-        task.execute(cityAndCountry);
+        if(!output.isEmpty()){
+            //This list will only have one city:
+            String cityAndCountry = output.get(0);
+            //Save it as the last city used by the app:
+            prefs.edit().putString(getString(R.string.key_last_location),
+                    cityAndCountry).apply();
+            //request updated weather online:
+            WeatherRequestTask task = new WeatherRequestTask(this);
+            task.execute(cityAndCountry);
+        }
     }
 
     @Override
@@ -200,7 +216,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             DBHelper helper = DBHelper.getInstance(this);
             //save the new retrieved data:
             helper.save(cityWeather);
-            fillData();
+            fillWeatherNowData();
         }else{
             Snackbar.make(findViewById(R.id.coordinator_layout),
                     getString(R.string.error_getting_data),

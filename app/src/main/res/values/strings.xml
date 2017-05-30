@@ -17,7 +17,9 @@
 
     <string name="unit_summary">%s</string>
 
-    <string name="error_getting_data">Error getting data from openweather</string>
+    <!--Error messages-->
+    <string name="error_no_internet">No internet connection! Data may be out-of-date!</string>
+    <string name="error_getting_data">Error getting data from OpenWeather</string>
 
     //Unit Strings:
     <string name="celsius">Celsius</string>

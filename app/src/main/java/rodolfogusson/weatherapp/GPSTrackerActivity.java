@@ -77,6 +77,10 @@ public class GPSTrackerActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(Bundle bundle) {
+        retrieveLocation();
+    }
+
+    private void retrieveLocation(){
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
@@ -88,7 +92,6 @@ public class GPSTrackerActivity extends AppCompatActivity implements
         } catch (SecurityException e) {
             Log.d("SECURITY EXCEPTION", e.getMessage());
         }
-
     }
 
     private void handleNewLocation(Location location){
@@ -112,5 +115,23 @@ public class GPSTrackerActivity extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location) {
         handleNewLocation(location);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    retrieveLocation();
+                } else {
+                    // permission was denied
+                    finish();
+                }
+                return;
+            }
+        }
     }
 }

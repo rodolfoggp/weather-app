@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CITIES_TA
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.CITY;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.COUNTRY;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WEATHERS_TABLE;
+import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DATE;
 import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.LOCATION_ID;
 
 /**
@@ -154,6 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+
     public boolean save(CityWeather cityWeather){
         ContentValues values = CityWeatherSerializer.serialize(cityWeather);
         boolean operationWasSuccessful;
@@ -231,6 +235,20 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return false;
+    }
+
+    public void removeExpiredWeathers(){
+        db = getWritableDatabase();
+        String today = new LocalDate().toString();
+        String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE "
+                + DATE + " <= '" + today + "';";
+        db.beginTransaction();
+        try{
+            db.execSQL(query);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void cleanDB(){
