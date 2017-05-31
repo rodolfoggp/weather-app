@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp.persistance;
+package rodolfogusson.weatherapp.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,12 +17,12 @@ import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
 
 import static android.provider.BaseColumns._ID;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CITIES_TABLE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.CITY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.COUNTRY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WEATHERS_TABLE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DATE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.LOCATION_ID;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CITIES_TABLE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.CITY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.COUNTRY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WEATHERS_TABLE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.DATE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.LOCATION_ID;
 
 /**
  * Created by rodolfo on 5/19/17.

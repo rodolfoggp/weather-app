@@ -1,7 +1,9 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.settings;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import rodolfogusson.weatherapp.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rodolfogusson.weatherapp.R;
 import rodolfogusson.weatherapp.communication.CityRequestTask;
 
 public class SearchCityActivity extends AppCompatActivity implements CityRequestTask.AsyncResponse{

@@ -1,13 +1,13 @@
-package rodolfogusson.weatherapp.persistance;
+package rodolfogusson.weatherapp.persistence;
 
 import android.content.ContentValues;
 
 import rodolfogusson.weatherapp.model.CityWeather;
 
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.CITY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.COUNTRY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.LATITUDE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.LONGITUDE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.CITY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.COUNTRY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.LATITUDE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.LONGITUDE;
 
 
 /**

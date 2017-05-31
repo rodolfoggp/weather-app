@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;

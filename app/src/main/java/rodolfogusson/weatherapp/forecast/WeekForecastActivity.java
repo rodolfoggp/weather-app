@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.forecast;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,21 +20,33 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import rodolfogusson.weatherapp.R;
 import rodolfogusson.weatherapp.communication.CityRequestTask;
 import rodolfogusson.weatherapp.communication.WeatherRequestTask;
 import rodolfogusson.weatherapp.model.CityWeather;
 import rodolfogusson.weatherapp.model.Weather;
-import rodolfogusson.weatherapp.persistance.DBHelper;
+import rodolfogusson.weatherapp.persistence.DBHelper;
+import rodolfogusson.weatherapp.settings.SettingsActivity;
+import rodolfogusson.weatherapp.utilities.AppUtils;
+import rodolfogusson.weatherapp.utilities.GPSTracker;
+import rodolfogusson.weatherapp.utilities.LayoutUtils;
 
 public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse, CityRequestTask.AsyncResponse{
 
     CityWeather cityWeather;
     TextView city_and_day_tv, descr_tv, temp_tv, temp_high_tv, temp_low_tv;
     ImageView weather_today_img;
+
+    RecyclerView forecastRecyclerView;
+    LinearLayoutManager linearLayoutManager;
+    ForecastAdapter adapter;
+
     SharedPreferences prefs;
+
     boolean isFirstRun;
     boolean gettingResultsFromActivity = false;
 
@@ -52,6 +66,11 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         temp_high_tv = (TextView) findViewById(R.id.temp_high);
         temp_low_tv = (TextView) findViewById(R.id.temp_low);
         weather_today_img = (ImageView) findViewById(R.id.weather_today_img);
+
+        forecastRecyclerView = (RecyclerView) findViewById(R.id.forecast_list);
+        linearLayoutManager = new LinearLayoutManager(this);
+        forecastRecyclerView.setLayoutManager(linearLayoutManager);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstRun = prefs.getBoolean(getString(R.string.key_is_first_run), true);
     }
@@ -111,31 +130,42 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         }
     }
 
-    private void fillWeatherNowData(){
+    private void fillWeatherData(){
         if(cityWeather!=null && !cityWeather.getWeatherList().isEmpty()){
-            //Filling data for the weather now card:
-            Weather weather = cityWeather.getWeatherAt(0);
-            city_and_day_tv.setText(
-                    cityWeather.getLocation().getCity()
-                    + ", " + cityWeather.getLocation().getCountry()
-                    + " - "
-                    + new DateTime().dayOfWeek().getAsText(Locale.getDefault()));
-            descr_tv.setText(weather.getCurrentCondition().getDescription());
-            LayoutUtils utils = LayoutUtils.getInstance().init(this);
-            String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow());
-            temp_tv.setText(temp);
-            String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp());
-            String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp());
-            temp_high_tv.setText("High: " + max_temp);
-            temp_low_tv.setText("Low: " + min_temp);
-            weather_today_img.setImageBitmap(weather.getIcon());
+            fillWeatherNowCard();
+            fillForecastCard();
+        }else{
+            adapter.clear();
         }
+    }
+
+    private void fillWeatherNowCard(){
+        Weather weather = cityWeather.getWeatherAt(0);
+        city_and_day_tv.setText(
+                cityWeather.getLocation().getCity()
+                        + ", " + cityWeather.getLocation().getCountry()
+                        + " - "
+                        + new DateTime().dayOfWeek().getAsText(Locale.US));
+        descr_tv.setText(weather.getCurrentCondition().getDescription());
+        LayoutUtils utils = LayoutUtils.getInstance().init(this);
+        String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow());
+        temp_tv.setText(temp);
+        String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp());
+        String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp());
+        temp_high_tv.setText("High: " + max_temp);
+        temp_low_tv.setText("Low: " + min_temp);
+        weather_today_img.setImageBitmap(weather.getIcon());
+    }
+
+    private void fillForecastCard(){
+        adapter = new ForecastAdapter(this,cityWeather.getWeatherList());
+        forecastRecyclerView.setAdapter(adapter);
     }
 
     private void showWeatherDataInDBFor(String cityAndCountry){
         if(cityAndCountry != null){
             cityWeather = DBHelper.getInstance(this).findCityWeather(cityAndCountry);
-            fillWeatherNowData();
+            fillWeatherData();
         }
     }
 
@@ -217,7 +247,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             DBHelper helper = DBHelper.getInstance(this);
             //save the new retrieved data:
             helper.save(cityWeather);
-            fillWeatherNowData();
+            fillWeatherData();
         }else{
             Snackbar.make(findViewById(R.id.coordinator_layout),
                     getString(R.string.error_getting_data),

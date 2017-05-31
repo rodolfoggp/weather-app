@@ -1,8 +1,10 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import rodolfogusson.weatherapp.R;
 
 /**
  * Created by rodolfo on 5/27/17.

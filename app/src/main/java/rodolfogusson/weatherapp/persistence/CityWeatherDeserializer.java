@@ -1,14 +1,14 @@
-package rodolfogusson.weatherapp.persistance;
+package rodolfogusson.weatherapp.persistence;
 
 import android.database.Cursor;
 
 import rodolfogusson.weatherapp.model.CityWeather;
 
 import static android.provider.BaseColumns._ID;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.CITY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.COUNTRY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.LATITUDE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.CityWeatherColumns.LONGITUDE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.CITY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.COUNTRY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.LATITUDE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeatherColumns.LONGITUDE;
 
 /**
  * Created by rodolfo on 5/20/17.

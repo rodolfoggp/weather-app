@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp;
+package rodolfogusson.weatherapp.settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+
+import rodolfogusson.weatherapp.R;
 
 /**
  * Created by rodolfo on 5/22/17.

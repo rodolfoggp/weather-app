@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp.persistance;
+package rodolfogusson.weatherapp.persistence;
 
 import android.provider.BaseColumns;
 

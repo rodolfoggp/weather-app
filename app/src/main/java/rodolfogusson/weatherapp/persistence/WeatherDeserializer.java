@@ -1,4 +1,4 @@
-package rodolfogusson.weatherapp.persistance;
+package rodolfogusson.weatherapp.persistence;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,20 +8,20 @@ import org.joda.time.LocalDate;
 
 import rodolfogusson.weatherapp.model.Weather;
 
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.CONDITION;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DATE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DAY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.DESCRIPTION;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.EVENING;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.HUMIDITY;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.ICON;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MAX_TEMP;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MIN_TEMP;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.MORNING;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.NIGHT;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.PRESSURE;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.TEMP_NOW;
-import static rodolfogusson.weatherapp.persistance.CityWeatherContract.WeatherColumns.WEATHER_ID;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.CONDITION;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.DATE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.DAY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.DESCRIPTION;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.EVENING;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.HUMIDITY;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.ICON;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.MAX_TEMP;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.MIN_TEMP;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.MORNING;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.NIGHT;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.PRESSURE;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.TEMP_NOW;
+import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherColumns.WEATHER_ID;
 
 /**
  * Created by rodolfo on 5/20/17.
