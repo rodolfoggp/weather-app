@@ -111,14 +111,18 @@ public class DBHelper extends SQLiteOpenHelper {
         List<CityWeather> list = new ArrayList<>();
         db.beginTransaction();
         Cursor cursor = null;
-        try{
-            cursor = db.rawQuery(query, new String[]{country,city});
-            while (cursor.moveToNext()){
-                CityWeatherDeserializer deserializer = new CityWeatherDeserializer();
-                CityWeather cityWeather = deserializer.deserialize(cursor,this);
-                list.add(cityWeather);
+        try {
+            cursor = db.rawQuery(query, new String[]{country, city});
+            if(cursor != null && cursor.getCount() > 0){
+                while (cursor.moveToNext()) {
+                    CityWeatherDeserializer deserializer = new CityWeatherDeserializer();
+                    CityWeather cityWeather = deserializer.deserialize(cursor, this);
+                    list.add(cityWeather);
+                }
             }
             db.setTransactionSuccessful();
+        }catch(Exception e){
+            Log.d("EXCEPTION: ",e.getMessage());
         }finally{
             closeCursor(cursor);
             db.endTransaction();
@@ -175,16 +179,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 if(row != -1){
                     operationWasSuccessful = saveWeathers(cityWeather, row);
                     if (operationWasSuccessful) {
-
-                        /**
-                         * Test: printing DB data
-                         */
-
-                        List<Weather> list = findWeathersFor(row);
-                        for(Weather w : list){
-                            Log.d("WEATHER: " , w.toString());
-                        }
-
                         db.setTransactionSuccessful();
                         return true;
                     }
@@ -240,8 +234,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removeExpiredWeathers(){
         db = getWritableDatabase();
         String today = new LocalDate().toString();
+        /*String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE "
+                + DATE + " < '" + today + "';";*/
         String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE "
-                + DATE + " <= '" + today + "';";
+                + DATE + " < date('now')";
         db.beginTransaction();
         try{
             db.execSQL(query);

@@ -40,7 +40,7 @@ public class JSONWeatherParser extends JSONParser{
             JSONObject jWeatherToday = jWeatherArray.getJSONObject(0);
             Weather weatherToday = new Weather();
             long dt = jNow.getLong("dt");
-            LocalDate dateToday = new LocalDate(dt);
+            LocalDate dateToday = new LocalDate(dt*1000); //dt*1000 to transform dt(in seconds) to millis
             weatherToday.setDate(dateToday);
             weatherToday.getCurrentCondition().setWeatherId(getInt("id",jWeatherToday));
             weatherToday.getCurrentCondition().setCondition(getString("main",jWeatherToday));

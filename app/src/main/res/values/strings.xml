@@ -18,7 +18,7 @@
     <string name="unit_summary">%s</string>
 
     <!--Error messages-->
-    <string name="error_no_internet">No internet connection! Data may be out-of-date!</string>
+    <string name="error_no_internet">No internet connection! Weather information may be outdated!</string>
     <string name="error_getting_data">Error getting data from OpenWeather</string>
 
     //Unit Strings:

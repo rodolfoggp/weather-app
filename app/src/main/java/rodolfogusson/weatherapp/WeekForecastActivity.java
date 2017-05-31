@@ -59,13 +59,9 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     @Override
     protected void onResume() {
         super.onResume();
-        if(!gettingResultsFromActivity){
-            //ensures that we are only working with up-to-date weather data:
-            DBHelper.getInstance(this).removeExpiredWeathers();
-            getAndDisplayData();
-        }else{
-            gettingResultsFromActivity = false;
-        }
+        //ensures that we are only working with up-to-date weather data:
+        DBHelper.getInstance(this).removeExpiredWeathers();
+        getAndDisplayData();
         if(!AppUtils.isNetworkAvailable(this)){
             //Show warning: no internet!
             final Snackbar snack = Snackbar.make(findViewById(R.id.coordinator_layout),
@@ -95,8 +91,14 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
                 showWeatherDataInDBFor(cityAndCountry);
                 //get current latitude and longitude and get weather data for them:
                 gettingResultsFromActivity = true;
-                Intent intent = new Intent(this, GPSTrackerActivity.class);
-                startActivityForResult(intent,1);
+                GPSTracker gps = new GPSTracker(this);
+                if(gps.canGetLocation()){
+                    currentLatitude = gps.getLatitude();
+                    currentLongitude = gps.getLongitude();
+                    //fetch the city that has these coordinates:
+                    CityRequestTask task = new CityRequestTask(this);
+                    task.execute(String.valueOf(currentLatitude),String.valueOf(currentLongitude));
+                }
             }else{
                 //Using city set in preferences:
                 cityAndCountry = prefs.getString(getString(R.string.key_location),null);
@@ -176,9 +178,8 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         }
     }
 
-    /**
+    /*
      * When we get latitude and longitude from gps:
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,7 +191,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             CityRequestTask task = new CityRequestTask(this);
             task.execute(String.valueOf(currentLatitude),String.valueOf(currentLongitude));
         }
-    }
+    }*/
 
     /**
      * When we get the city with given coordinates:
