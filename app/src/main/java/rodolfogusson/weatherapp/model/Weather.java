@@ -65,7 +65,7 @@ public class Weather {
      */
     public Float getTemperatureNow(){
         Float tempNow = temperature.getTempNow();
-        if(tempNow != null){
+        if(tempNow != 0.0){ //0.0 Kelvin, means this variable has not been set
             //The temperature for this day has been set already:
             return tempNow;
         }else{

@@ -16,9 +16,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-public class GPSTracker extends Activity implements LocationListener {
+public class GPSTracker extends AppCompatActivity implements LocationListener {
     private Context mContext = null;
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -37,23 +38,16 @@ public class GPSTracker extends Activity implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSTracker() {}
-
     public GPSTracker(Context context) {
         this.mContext = context;
         getLocation();
     }
 
-    private void checkForPermissions(){
-        // Check for permission
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this, // Activity
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
-        }
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(
+                (Activity)mContext,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
     }
 
     public Location getLocation() {
@@ -72,6 +66,11 @@ public class GPSTracker extends Activity implements LocationListener {
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
+                    if (ContextCompat.checkSelfPermission((Activity)mContext,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions();
+                    }
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
@@ -88,8 +87,10 @@ public class GPSTracker extends Activity implements LocationListener {
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            checkForPermissions();
+                        if (ContextCompat.checkSelfPermission((Activity)mContext,
+                                Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED){
+                            requestPermissions();
                         }
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
@@ -120,7 +121,7 @@ public class GPSTracker extends Activity implements LocationListener {
     public void stopUsingGPS() {
         if (locationManager != null) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                checkForPermissions();
+                requestPermissions();
                 return;
             }
             locationManager.removeUpdates(GPSTracker.this);

@@ -77,7 +77,7 @@ public class JSONWeatherParser extends JSONParser{
 
                 //getting date for this weather:
                 LocalDate date = new LocalDate(dateToday);
-                date.plusDays(i);
+                date = date.plusDays(i);
                 weather.setDate(date);
 
                 //getting temperature:
