@@ -1,6 +1,8 @@
 package rodolfogusson.weatherapp.model;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -9,7 +11,7 @@ import org.joda.time.LocalTime;
  * Created by rodolfo on 5/17/17.
  */
 
-public class Weather {
+public class Weather implements Parcelable {
     private LocalDate date;
     private CurrentCondition currentCondition;
     private Temperature temperature;
@@ -88,4 +90,37 @@ public class Weather {
         }
         return null;
     }
+
+    protected Weather(Parcel in) {
+        date = (LocalDate) in.readValue(LocalDate.class.getClassLoader());
+        currentCondition = (CurrentCondition) in.readValue(CurrentCondition.class.getClassLoader());
+        temperature = (Temperature) in.readValue(Temperature.class.getClassLoader());
+        icon = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(date);
+        dest.writeValue(currentCondition);
+        dest.writeValue(temperature);
+        dest.writeValue(icon);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Weather> CREATOR = new Parcelable.Creator<Weather>() {
+        @Override
+        public Weather createFromParcel(Parcel in) {
+            return new Weather(in);
+        }
+
+        @Override
+        public Weather[] newArray(int size) {
+            return new Weather[size];
+        }
+    };
 }

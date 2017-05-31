@@ -1,15 +1,23 @@
 package rodolfogusson.weatherapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by rodolfo on 5/16/17.
  */
 
-public class CurrentCondition {
-    private int weatherId, humidity;
+public class CurrentCondition implements Parcelable {
+    private int weatherId;
+    private int humidity;
     private float pressure;
     private String description;
     private String condition;
     private String iconCode;
+
+    public CurrentCondition(){
+
+    }
 
     public String getIconCode() {
         return iconCode;
@@ -59,4 +67,41 @@ public class CurrentCondition {
     public void setCondition(String condition) {
         this.condition = condition;
     }
+
+    protected CurrentCondition(Parcel in) {
+        weatherId = in.readInt();
+        humidity = in.readInt();
+        pressure = in.readFloat();
+        description = in.readString();
+        condition = in.readString();
+        iconCode = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(weatherId);
+        dest.writeInt(humidity);
+        dest.writeFloat(pressure);
+        dest.writeString(description);
+        dest.writeString(condition);
+        dest.writeString(iconCode);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<CurrentCondition> CREATOR = new Parcelable.Creator<CurrentCondition>() {
+        @Override
+        public CurrentCondition createFromParcel(Parcel in) {
+            return new CurrentCondition(in);
+        }
+
+        @Override
+        public CurrentCondition[] newArray(int size) {
+            return new CurrentCondition[size];
+        }
+    };
 }

@@ -8,11 +8,12 @@ import rodolfogusson.weatherapp.model.Weather;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    final Weather weather;
+    Weather weather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        weather = getIntent().getParcelableExtra("weather");
     }
 }

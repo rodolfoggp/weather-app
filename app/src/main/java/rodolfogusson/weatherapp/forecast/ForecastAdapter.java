@@ -92,6 +92,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
             int pos = getLayoutPosition();
             Intent intent = new Intent(mContext, DetailsActivity.class);
             intent.putExtra("weather",weathers.get(pos));
+            mContext.startActivity(intent);
         }
     }
 }

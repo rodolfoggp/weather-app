@@ -146,7 +146,8 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
                         + ", " + cityWeather.getLocation().getCountry()
                         + " - "
                         + new DateTime().dayOfWeek().getAsText(Locale.US));
-        descr_tv.setText(weather.getCurrentCondition().getDescription());
+        descr_tv.setText(weather.getCurrentCondition().getCondition() +
+                " - " + weather.getCurrentCondition().getDescription());
         LayoutUtils utils = LayoutUtils.getInstance().init(this);
         String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow());
         temp_tv.setText(temp);

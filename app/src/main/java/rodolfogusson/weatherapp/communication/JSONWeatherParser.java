@@ -104,7 +104,7 @@ public class JSONWeatherParser extends JSONParser{
                 currentCondition.setCondition(getString("main",jWeather));
                 currentCondition.setDescription(getString("description",jWeather));
                 currentCondition.setWeatherId(getInt("id",jWeather));
-                currentCondition.setIconCode(getString("icon",jWeatherToday));
+                currentCondition.setIconCode(getString("icon",jWeather));
 
                 cityWeather.addWeather(weather);
             }
