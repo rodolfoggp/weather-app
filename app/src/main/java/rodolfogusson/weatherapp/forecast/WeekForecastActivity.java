@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +39,7 @@ import rodolfogusson.weatherapp.utilities.LayoutUtils;
 public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse, CityRequestTask.AsyncResponse{
 
     CityWeather cityWeather;
-    TextView city_and_day_tv, descr_tv, temp_tv, temp_high_tv, temp_low_tv;
+    TextView city_tv, day_tv, descr_tv, temp_tv, temp_high_tv, temp_low_tv;
     ImageView weather_today_img;
 
     RecyclerView forecastRecyclerView;
@@ -60,7 +61,8 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        city_and_day_tv = (TextView) findViewById(R.id.city_and_day);
+        city_tv = (TextView) findViewById(R.id.city);
+        day_tv = (TextView) findViewById(R.id.day_of_week);
         descr_tv = (TextView) findViewById(R.id.description);
         temp_tv = (TextView) findViewById(R.id.temp_now);
         temp_high_tv = (TextView) findViewById(R.id.temp_high);
@@ -70,6 +72,9 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         forecastRecyclerView = (RecyclerView) findViewById(R.id.forecast_list);
         linearLayoutManager = new LinearLayoutManager(this);
         forecastRecyclerView.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(forecastRecyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        forecastRecyclerView.addItemDecoration(dividerItemDecoration);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstRun = prefs.getBoolean(getString(R.string.key_is_first_run), true);
@@ -141,11 +146,9 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
 
     private void fillWeatherNowCard(){
         Weather weather = cityWeather.getWeatherAt(0);
-        city_and_day_tv.setText(
-                cityWeather.getLocation().getCity()
-                        + ", " + cityWeather.getLocation().getCountry()
-                        + " - "
-                        + new DateTime().dayOfWeek().getAsText(Locale.US));
+        city_tv.setText(cityWeather.getLocation().getCity()
+                        + ", " + cityWeather.getLocation().getCountry());
+        day_tv.setText(weather.getDate().dayOfWeek().getAsText(Locale.US));
         descr_tv.setText(weather.getCurrentCondition().getCondition() +
                 " - " + weather.getCurrentCondition().getDescription());
         LayoutUtils utils = LayoutUtils.getInstance().init(this);
