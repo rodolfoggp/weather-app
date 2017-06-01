@@ -2,11 +2,16 @@
 Aplicativo Android feito com o objetivo de buscar informações de clima pela API do openweather.  
 
 ## Informações de Uso do Aplicativo
-O aplicativo requisita da API Openweather informações de clima (16 dias) para a cidade escolhida na tela de preferências.
-Atualmente o aplicativo só mostra a temperatura(em Kelvin) e condição do clima atual.  
-Ao clicar nas opções no canto superior direito da Activity principal, e em seguida em Settings, a tela de preferências é aberta, onde o usuário poderá escolher a cidade(atualmente a lista só possui três cidades) e a unidade da temperatura desejada(ainda não implementado).  
-O aplicativo funciona em modo offline, persistindo os últimos dados lidos de cada cidade e mostrando-os na tela principal quando não for possível buscá-los na internet.  
+O aplicativo requisita da API Openweather informações de clima (16 dias) para a cidade escolhida na tela de preferências. 
+
+Ao clicar nas opções no canto superior direito da Activity principal, e em seguida em Settings, a tela de preferências é aberta, onde o usuário poderá escolher a unidade da temperatura desejada e a cidade(podendo escolher a localização atual, buscada pela internet ou gps; ou ainda buscar uma localização fixa online).  
+
+O aplicativo funciona em modo offline, persistindo os últimos dados lidos de cada cidade e mostrando-os na tela principal quando não for possível buscar dados mais recentes na internet.
+
 Para conseguir usar o aplicativo, deve-se preencher a "API Key" com uma chave válida do OpenWeather, na tela Settings. 
+
+Na tela principal, será possível ver o clima e temperatura atuais, assim como a previsão para toda a semana.
+Ao clicar em um dos dias, o usuário é levado para uma tela com informações mais detalhadas sobre o clima daquele dia.
   
 ## Informações de Desenvolvimento
 Este projeto foi feito usando linguagem nativa JAVA e a IDE Android Studio.  
@@ -19,8 +24,6 @@ A persistência de dados foi feita através de banco de dados, usando SQLite.
 Há uma tabela "cities" para se guardar referências para as cidades já buscadas, e uma tabela "weathers" onde se guardam as informações de clima para todas as cidades já buscadas.
 
 O aplicativo guarda as configurações feitas na tela Settings por meio de SharedPreferences.  
-
-A interface ainda não mostra todas as informações pedidas. Esta será implementada totalmente na próxima versão.  
 
 ## Autor
 
