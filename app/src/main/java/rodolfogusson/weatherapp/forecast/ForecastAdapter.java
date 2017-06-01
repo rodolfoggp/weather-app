@@ -24,10 +24,13 @@ import rodolfogusson.weatherapp.utilities.LayoutUtils;
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastListViewHolder> {
     private List<Weather> weathers;
     private Context mContext;
+    private String city, country;
 
-    public ForecastAdapter(Context context, List<Weather> list) {
+    public ForecastAdapter(Context context, List<Weather> list, String city, String country) {
         buildForecastList(list);
         this.mContext = context;
+        this.city = city;
+        this.country = country;
     }
 
     private void buildForecastList(List<Weather> list){
@@ -46,8 +49,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
     @Override
     public ForecastListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.forecast_list_item, null);
-        ForecastListViewHolder viewHolder = new ForecastListViewHolder(view);
-        return viewHolder;
+        return new ForecastListViewHolder(view);
     }
 
     @Override
@@ -92,6 +94,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
             int pos = getLayoutPosition();
             Intent intent = new Intent(mContext, DetailsActivity.class);
             intent.putExtra("weather",weathers.get(pos));
+            intent.putExtra("city",city);
+            intent.putExtra("country",country);
             mContext.startActivity(intent);
         }
     }

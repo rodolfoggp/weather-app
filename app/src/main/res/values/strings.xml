@@ -21,7 +21,15 @@
     <string name="error_no_internet">No internet connection! Weather information may be outdated!</string>
     <string name="error_getting_data">Error getting data from OpenWeather</string>
 
-    //Unit Strings:
+    <!--Unit Strings-->
     <string name="celsius">Celsius</string>
     <string name="fahrenheit">Fahrenheit</string>
+    <string name="pressure_unit">hPa</string>
+    <string name="humidity_unit">%</string>
+
+    <!--Layout Strings-->
+    <string name="high_txt">High: </string>
+    <string name="low_txt">Low: </string>
+    <string name="pressure_txt">Pressure: </string>
+    <string name="humidity_txt">Humidity: </string>
 </resources>

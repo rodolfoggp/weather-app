@@ -3,13 +3,11 @@ package rodolfogusson.weatherapp.communication;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.preference.PreferenceManager;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,15 +20,15 @@ import rodolfogusson.weatherapp.R;
  * Created by rodolfo on 5/17/17.
  */
 
-public class HttpClient {
+class HttpClient {
     private static String WEATHER_NOW_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private static String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
     private static String CITIES_BASE_URL = "http://api.openweathermap.org/data/2.5/find?q=";
     private static String LAT_LON_BASE_URL = "http://api.openweathermap.org/data/2.5/weather?";
-    public static String IMG_URL = "http://openweathermap.org/img/w/";
+    private static String IMG_URL = "http://openweathermap.org/img/w/";
     private static String apiKey = "";
     private static String APP_ID_SUFFIX = "&APPID=";
-    Context context;
+    private Context context;
 
     HttpClient(Context ctx){
         this.context = ctx;
@@ -97,7 +95,7 @@ public class HttpClient {
                 APP_ID_SUFFIX + apiKey);
     }
 
-    public Bitmap getImage(String code) {
+    Bitmap getImage(String code) {
         Bitmap img = null;
         try {
             img = Picasso.with(context).load(IMG_URL + code + ".png").get();
@@ -105,39 +103,5 @@ public class HttpClient {
             e.printStackTrace();
         }
         return img;
-        /*HttpURLConnection con = null;
-        InputStream is = null;
-        try {
-            con = (HttpURLConnection) (new URL(IMG_URL + code + ".png"*//* + APP_ID_SUFFIX + apiKey*//*)).openConnection();
-            con.setRequestMethod("GET");
-            con.setDoInput(true);
-            con.setDoOutput(true);
-            int responseCode = con.getResponseCode();
-            if (responseCode >= 400 && responseCode <= 499) {
-                throw new Exception("Bad authentication status: " + responseCode);
-            } else {
-                // Let's read the response
-                is = con.getInputStream();
-                byte[] buffer = new byte[1024];
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                while (is.read(buffer) != -1)
-                    baos.write(buffer);
-
-                return baos.toByteArray();
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (Throwable t) {
-            }
-            try {
-                con.disconnect();
-            } catch (Throwable t) {
-            }
-        }
-        return null;*/
     }
 }

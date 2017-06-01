@@ -19,9 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,10 +47,6 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
     SharedPreferences prefs;
 
     boolean isFirstRun;
-    boolean gettingResultsFromActivity = false;
-
-    private double currentLatitude;
-    private double currentLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +108,10 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
                 //show weather stored in database for the selected city:
                 showWeatherDataInDBFor(cityAndCountry);
                 //get current latitude and longitude and get weather data for them:
-                gettingResultsFromActivity = true;
                 GPSTracker gps = new GPSTracker(this);
                 if(gps.canGetLocation()){
-                    currentLatitude = gps.getLatitude();
-                    currentLongitude = gps.getLongitude();
+                    double currentLatitude = gps.getLatitude();
+                    double currentLongitude = gps.getLongitude();
                     //fetch the city that has these coordinates:
                     CityRequestTask task = new CityRequestTask(this);
                     task.execute(String.valueOf(currentLatitude),String.valueOf(currentLongitude));
@@ -140,12 +133,14 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
             fillWeatherNowCard();
             fillForecastCard();
         }else{
-            adapter.clear();
+            if(adapter != null){
+                adapter.clear();
+            }
         }
     }
 
     private void fillWeatherNowCard(){
-        Weather weather = cityWeather.getWeatherAt(0);
+        final Weather weather = cityWeather.getWeatherAt(0);
         city_tv.setText(cityWeather.getLocation().getCity()
                         + ", " + cityWeather.getLocation().getCountry());
         day_tv.setText(weather.getDate().dayOfWeek().getAsText(Locale.US));
@@ -156,13 +151,27 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         temp_tv.setText(temp);
         String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp());
         String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp());
-        temp_high_tv.setText("High: " + max_temp);
-        temp_low_tv.setText("Low: " + min_temp);
+        temp_high_tv.setText(getString(R.string.high_txt) + max_temp);
+        temp_low_tv.setText(getString(R.string.low_txt) + min_temp);
         weather_today_img.setImageBitmap(weather.getIcon());
+        View cardFrame = findViewById(R.id.card_frame);
+        cardFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WeekForecastActivity.this, DetailsActivity.class);
+                intent.putExtra("weather",weather);
+                intent.putExtra("city",cityWeather.getLocation().getCity());
+                intent.putExtra("country",cityWeather.getLocation().getCountry());
+                startActivity(intent);
+            }
+        });
     }
 
     private void fillForecastCard(){
-        adapter = new ForecastAdapter(this,cityWeather.getWeatherList());
+        adapter = new ForecastAdapter(this,
+                cityWeather.getWeatherList(),
+                cityWeather.getLocation().getCity(),
+                cityWeather.getLocation().getCountry());
         forecastRecyclerView.setAdapter(adapter);
     }
 
@@ -212,21 +221,6 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         }
     }
 
-    /*
-     * When we get latitude and longitude from gps:
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1){
-            Bundle extras = data.getExtras();
-            currentLongitude = extras.getDouble("Longitude");
-            currentLatitude = extras.getDouble("Latitude");
-            //fetch the city that has these coordinates:
-            CityRequestTask task = new CityRequestTask(this);
-            task.execute(String.valueOf(currentLatitude),String.valueOf(currentLongitude));
-        }
-    }*/
-
     /**
      * When we get the city with given coordinates:
      */
@@ -246,16 +240,12 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
 
     @Override
     public void onCityWeatherRetrieved(CityWeather output) {
-        cityWeather = output;
-        if(cityWeather!=null){
+        if(output!=null){
+            cityWeather = output;
             DBHelper helper = DBHelper.getInstance(this);
             //save the new retrieved data:
             helper.save(cityWeather);
             fillWeatherData();
-        }else{
-            Snackbar.make(findViewById(R.id.coordinator_layout),
-                    getString(R.string.error_getting_data),
-                    Snackbar.LENGTH_LONG).show();
         }
     }
 }

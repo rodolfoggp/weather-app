@@ -43,7 +43,7 @@ public class LayoutUtils {
         return null;
     }
 
-    public String getConvertedTemperature(float kelvinTemp){
+    /*public String getConvertedTemperature(float kelvinTemp){
         String selectedUnit = spf.getString(context.getString(R.string.key_unit),null);
         if(selectedUnit!=null){
             if(selectedUnit.equals(context.getString(R.string.celsius))){
@@ -53,13 +53,13 @@ public class LayoutUtils {
             }
         }
         return null;
+    }*/
+
+    public String getPressureWithUnit(float pressure){
+        return pressure + " " + context.getString(R.string.pressure_unit);
     }
 
-    /*public String getUnitText(){
-
-    }*/
-
-    /*public int getTemperatureNow(String city, String country){
-
-    }*/
+    public String getHumidityWithUnit(int humidity){
+        return humidity + " " + context.getString(R.string.humidity_unit);
+    }
 }

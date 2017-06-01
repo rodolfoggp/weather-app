@@ -165,6 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean save(CityWeather cityWeather){
         ContentValues values = CityWeatherSerializer.serialize(cityWeather);
         boolean operationWasSuccessful;
+        db = getWritableDatabase();
         db.beginTransaction();
         try{
             CityWeather cityWeatherOnDB = findCityWeather(
@@ -175,9 +176,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE " + LOCATION_ID + " =?";
                 //Cleaning all old weather data about the city in question:
                 db.execSQL(query, new String[]{String.valueOf(id)});
-                long row = db.update(CITIES_TABLE, values, _ID+"="+id,null);
-                if(row != -1){
-                    operationWasSuccessful = saveWeathers(cityWeather, row);
+                //int result = db.delete(WEATHERS_TABLE, LOCATION_ID + " = ?", new String[] { Long.toString(id) });
+                int numberOfRowsAffected = db.update(CITIES_TABLE, values, _ID+"="+id,null);
+                if(numberOfRowsAffected != -1){
+                    operationWasSuccessful = saveWeathers(cityWeather, id);
                     if (operationWasSuccessful) {
                         db.setTransactionSuccessful();
                         return true;
@@ -234,10 +236,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removeExpiredWeathers(){
         db = getWritableDatabase();
         String today = new LocalDate().toString();
-        /*String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE "
-                + DATE + " < '" + today + "';";*/
         String query = "DELETE FROM " + WEATHERS_TABLE + " WHERE "
-                + DATE + " < date('now')";
+                + DATE + " < '" + today + "';";
         db.beginTransaction();
         try{
             db.execSQL(query);
