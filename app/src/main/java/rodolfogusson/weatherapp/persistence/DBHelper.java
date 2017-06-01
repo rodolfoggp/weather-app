@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static DBHelper instance;
     private SQLiteDatabase db;
 
-    public DBHelper(Context context){
+    private DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         db = getWritableDatabase();
     }
@@ -133,7 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public List<Weather> findWeathersFor(long locationID){
+    List<Weather> findWeathersFor(long locationID){
         db = getReadableDatabase();
         String query = "SELECT * FROM " + WEATHERS_TABLE
                 + " WHERE " + LOCATION_ID + "=?";
@@ -162,7 +162,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean save(CityWeather cityWeather){
+    public void save(CityWeather cityWeather){
         ContentValues values = CityWeatherSerializer.serialize(cityWeather);
         boolean operationWasSuccessful;
         db = getWritableDatabase();
@@ -182,7 +182,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     operationWasSuccessful = saveWeathers(cityWeather, id);
                     if (operationWasSuccessful) {
                         db.setTransactionSuccessful();
-                        return true;
                     }
                 }
             }else{
@@ -191,14 +190,12 @@ public class DBHelper extends SQLiteOpenHelper {
                     operationWasSuccessful = saveWeathers(cityWeather, row);
                     if (operationWasSuccessful) {
                         db.setTransactionSuccessful();
-                        return true;
                     }
                 }
             }
         }finally{
             db.endTransaction();
         }
-        return false;
     }
 
     private boolean saveWeathers(CityWeather cityWeather, long row){
@@ -212,25 +209,6 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         return operationWasSuccessful;
-    }
-
-    public boolean doesTableExist(String tableName) {
-        if(db == null || !db.isOpen()) {
-            db = getReadableDatabase();
-        }
-        if(!db.isReadOnly()) {
-            db.close();
-            db = getReadableDatabase();
-        }
-        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+tableName+"'", null);
-        if(cursor!=null) {
-            if(cursor.getCount()>0) {
-                cursor.close();
-                return true;
-            }
-            cursor.close();
-        }
-        return false;
     }
 
     public void removeExpiredWeathers(){
@@ -247,7 +225,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void cleanDB(){
+    private void cleanDB(){
         db = getReadableDatabase();
         db.beginTransaction();
         try {

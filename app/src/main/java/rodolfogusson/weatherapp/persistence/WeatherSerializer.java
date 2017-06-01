@@ -29,9 +29,9 @@ import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherCo
  * Created by rodolfo on 5/19/17.
  */
 
-public class WeatherSerializer {
+class WeatherSerializer {
 
-    public static ContentValues serialize(Weather weather, long foreignKey){
+    static ContentValues serialize(Weather weather, long foreignKey){
         ContentValues values = new ContentValues();
         values.put(LOCATION_ID,foreignKey);
         values.put(DATE,weather.getDate().toString());

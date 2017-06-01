@@ -27,9 +27,9 @@ import static rodolfogusson.weatherapp.persistence.CityWeatherContract.WeatherCo
  * Created by rodolfo on 5/20/17.
  */
 
-public class WeatherDeserializer {
+class WeatherDeserializer {
 
-    public Weather deserialize(Cursor cursor){
+    Weather deserialize(Cursor cursor){
         Weather weather = new Weather();
 
         String dateString = readDate(cursor);

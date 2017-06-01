@@ -40,8 +40,8 @@ class HttpClient {
         return getWeatherData(location, WEATHER_NOW_BASE_URL,"");
     }
 
-    String getWeatherForecast(String location, int count){
-        return getWeatherData(location, FORECAST_BASE_URL,"&cnt="+count);
+    String getWeatherForecast(String location){
+        return getWeatherData(location, FORECAST_BASE_URL,"&cnt=16");
     }
 
     private String requestData(String url){

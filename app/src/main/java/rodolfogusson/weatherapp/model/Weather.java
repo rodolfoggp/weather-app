@@ -67,7 +67,7 @@ public class Weather implements Parcelable {
      */
     public Float getTemperatureNow(){
         Float tempNow = temperature.getTempNow();
-        if(tempNow != 0.0){ //0.0 Kelvin, means this variable has not been set
+        if(tempNow != null && tempNow != 0.0){ //0.0 Kelvin, means this variable has not been set
             //The temperature for this day has been set already:
             return tempNow;
         }else{
@@ -91,7 +91,7 @@ public class Weather implements Parcelable {
         return null;
     }
 
-    protected Weather(Parcel in) {
+    private Weather(Parcel in) {
         date = (LocalDate) in.readValue(LocalDate.class.getClassLoader());
         currentCondition = (CurrentCondition) in.readValue(CurrentCondition.class.getClassLoader());
         temperature = (Temperature) in.readValue(Temperature.class.getClassLoader());

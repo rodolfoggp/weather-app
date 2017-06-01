@@ -24,9 +24,9 @@ import rodolfogusson.weatherapp.communication.CityRequestTask;
 
 public class SearchCityActivity extends AppCompatActivity implements CityRequestTask.AsyncResponse{
 
-    RecyclerView recyclerView;
-    RecyclerViewAdapter adapter;
-    List<String> list;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
+    private List<String> list;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class SearchCityActivity extends AppCompatActivity implements CityRequest
             context = context1;
         }
 
-        public void updateList(List<String> data) {
+        void updateList(List<String> data) {
             values = data;
             notifyDataSetChanged();
         }

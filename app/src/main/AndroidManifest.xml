@@ -31,7 +31,7 @@
             android:theme="@style/SettingsTheme" />
         <activity android:name=".settings.SearchCityActivity" />
         <activity android:name=".utilities.GPSTracker" />
-        <activity android:name=".forecast.DetailsActivity"></activity>
+        <activity android:name=".forecast.DetailsActivity"/>
     </application>
 
 </manifest>

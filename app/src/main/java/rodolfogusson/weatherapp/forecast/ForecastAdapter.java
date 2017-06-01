@@ -21,12 +21,12 @@ import rodolfogusson.weatherapp.utilities.LayoutUtils;
  * Created by rodolfo on 5/31/17.
  */
 
-public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastListViewHolder> {
+class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastListViewHolder> {
     private List<Weather> weathers;
     private Context mContext;
     private String city, country;
 
-    public ForecastAdapter(Context context, List<Weather> list, String city, String country) {
+    ForecastAdapter(Context context, List<Weather> list, String city, String country) {
         buildForecastList(list);
         this.mContext = context;
         this.city = city;
@@ -60,9 +60,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         viewHolder.condition.setText(weather.getCurrentCondition().getCondition());
         LayoutUtils utils = LayoutUtils.getInstance().init(mContext);
         viewHolder.high.setText(utils.getConvertedTemperatureWithUnit(
-                weather.getTemperature().getMaxTemp()));
+                weather.getTemperature().getMaxTemp(), mContext));
         viewHolder.low.setText(utils.getConvertedTemperatureWithUnit(
-                weather.getTemperature().getMinTemp()));
+                weather.getTemperature().getMinTemp(), mContext));
     }
 
     @Override
@@ -70,16 +70,16 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         return (null != weathers ? weathers.size() : 0);
     }
 
-    public void clear(){
+    void clear(){
         weathers.clear();
         notifyDataSetChanged();
     }
 
     class ForecastListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        protected ImageView icon;
-        protected TextView dayOfWeek, condition, high, low;
+        ImageView icon;
+        TextView dayOfWeek, condition, high, low;
 
-        public ForecastListViewHolder(View view) {
+        ForecastListViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             dayOfWeek = (TextView) view.findViewById(R.id.day_of_week);

@@ -1,5 +1,6 @@
 package rodolfogusson.weatherapp.communication;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,9 +16,9 @@ import rodolfogusson.weatherapp.model.Weather;
  * Created by rodolfo on 5/16/17.
  */
 
-public class JSONWeatherParser extends JSONParser{
+class JSONWeatherParser extends JSONParser{
 
-    public static CityWeather getCityWeather(String weatherNowData, String weatherForecastData) throws JSONException{
+    static CityWeather getCityWeather(String weatherNowData, String weatherForecastData) throws JSONException{
         CityWeather cityWeather = null;
         if(weatherNowData != null && weatherForecastData != null){
             cityWeather = new CityWeather();
@@ -40,7 +41,7 @@ public class JSONWeatherParser extends JSONParser{
             JSONObject jWeatherToday = jWeatherArray.getJSONObject(0);
             Weather weatherToday = new Weather();
             long dt = jNow.getLong("dt");
-            LocalDate dateToday = new LocalDate(dt*1000); //dt*1000 to transform dt(in seconds) to millis
+            LocalDate dateToday = new LocalDate(dt*1000, DateTimeZone.UTC); //dt*1000 to transform dt(in seconds) to millis
             weatherToday.setDate(dateToday);
             weatherToday.getCurrentCondition().setWeatherId(getInt("id",jWeatherToday));
             weatherToday.getCurrentCondition().setCondition(getString("main",jWeatherToday));

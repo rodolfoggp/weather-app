@@ -15,7 +15,7 @@ import rodolfogusson.weatherapp.model.Weather;
 
 public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
 
-    public AsyncResponse callback = null;
+    private AsyncResponse callback = null;
 
     public WeatherRequestTask(AsyncResponse callback){
         this.callback = callback;
@@ -25,7 +25,7 @@ public class WeatherRequestTask extends AsyncTask<String, Void, CityWeather>{
     protected CityWeather doInBackground(String... params) {
         CityWeather cityWeather = null;
         String weatherNowData = ( (new HttpClient((Context) callback)).getWeatherNow(params[0]));
-        String weatherForecastData = ( (new HttpClient((Context) callback).getWeatherForecast(params[0], 16)));
+        String weatherForecastData = ( (new HttpClient((Context) callback).getWeatherForecast(params[0])));
         try {
             cityWeather = JSONWeatherParser.getCityWeather(weatherNowData, weatherForecastData);
             if(cityWeather != null){

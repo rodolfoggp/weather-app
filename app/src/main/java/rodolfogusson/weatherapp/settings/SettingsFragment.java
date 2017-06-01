@@ -14,8 +14,8 @@ import rodolfogusson.weatherapp.R;
  */
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-    Preference location, apiKey;
-    SharedPreferences spf;
+    private Preference location, apiKey;
+    private SharedPreferences spf;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

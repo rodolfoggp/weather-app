@@ -19,9 +19,9 @@ import rodolfogusson.weatherapp.utilities.LayoutUtils;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    Weather weather;
-    String city, country;
-    LayoutUtils utils;
+    private Weather weather;
+    private String city, country;
+    private LayoutUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class DetailsActivity extends AppCompatActivity {
         day_tv.setText(weather.getDate().dayOfWeek().getAsText(Locale.US));
         weather_img.setImageBitmap(weather.getIcon());
         if(weather.getDate().isEqual(new LocalDate())){ //if this weather is for today
-            String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow());
+            String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow(), this);
             temp_condition_tv.setText(temp);
             description_tv.setText(weather.getCurrentCondition().getCondition() + " - " +
                     weather.getCurrentCondition().getDescription());
@@ -79,25 +79,25 @@ public class DetailsActivity extends AppCompatActivity {
         fillBlock(R.id.high_block,
                 R.drawable.ic_temperature,
                 R.string.high_txt,
-                utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp()));
+                utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp(), this));
 
         //Low temp block:
         fillBlock(R.id.low_block,
                 R.drawable.ic_temperature,
                 R.string.low_txt,
-                utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp()));
+                utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp(), this));
 
         //Pressure block:
         fillBlock(R.id.pressure_block,
                 R.drawable.ic_pressure,
                 R.string.pressure_txt,
-                utils.getPressureWithUnit(weather.getCurrentCondition().getPressure()));
+                utils.getPressureWithUnit(weather.getCurrentCondition().getPressure(), this));
 
         //Humidity block:
         fillBlock(R.id.humidity_block,
                 R.drawable.ic_humidity,
                 R.string.humidity_txt,
-                utils.getHumidityWithUnit(weather.getCurrentCondition().getHumidity()));
+                utils.getHumidityWithUnit(weather.getCurrentCondition().getHumidity(), this));
     }
 
     private void fillBlock(int blockId, int drawableId, int textId, String value){

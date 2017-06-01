@@ -14,7 +14,6 @@ public class LayoutUtils {
 
     private static LayoutUtils instance = null;
     private static SharedPreferences spf;
-    private Context context;
 
     private LayoutUtils(){}
 
@@ -26,12 +25,11 @@ public class LayoutUtils {
     }
 
     public LayoutUtils init(Context context){
-        this.context = context;
         spf = PreferenceManager.getDefaultSharedPreferences(context);
         return this;
     }
 
-    public String getConvertedTemperatureWithUnit(float kelvinTemp){
+    public String getConvertedTemperatureWithUnit(float kelvinTemp, Context context){
         String selectedUnit = spf.getString(context.getString(R.string.key_unit),null);
         if(selectedUnit!=null){
             if(selectedUnit.equals(context.getString(R.string.celsius))){
@@ -43,23 +41,11 @@ public class LayoutUtils {
         return null;
     }
 
-    /*public String getConvertedTemperature(float kelvinTemp){
-        String selectedUnit = spf.getString(context.getString(R.string.key_unit),null);
-        if(selectedUnit!=null){
-            if(selectedUnit.equals(context.getString(R.string.celsius))){
-                return String.valueOf((int) (kelvinTemp - 273.15));
-            }else if(selectedUnit.equals(context.getString(R.string.fahrenheit))){
-                return String.valueOf((int) ((kelvinTemp * 9/5) - 459.67));
-            }
-        }
-        return null;
-    }*/
-
-    public String getPressureWithUnit(float pressure){
+    public String getPressureWithUnit(float pressure, Context context){
         return pressure + " " + context.getString(R.string.pressure_unit);
     }
 
-    public String getHumidityWithUnit(int humidity){
+    public String getHumidityWithUnit(int humidity, Context context){
         return humidity + " " + context.getString(R.string.humidity_unit);
     }
 }

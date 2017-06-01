@@ -14,9 +14,9 @@ import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeath
  * Created by rodolfo on 5/19/17.
  */
 
-public class CityWeatherSerializer {
+class CityWeatherSerializer {
 
-    public static ContentValues serialize(CityWeather cityWeather) {
+    static ContentValues serialize(CityWeather cityWeather) {
         ContentValues values = new ContentValues();
         values.put(LATITUDE, cityWeather.getLocation().getLatitude());
         values.put(LONGITUDE, cityWeather.getLocation().getLongitude());

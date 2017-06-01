@@ -14,9 +14,9 @@ import static rodolfogusson.weatherapp.persistence.CityWeatherContract.CityWeath
  * Created by rodolfo on 5/20/17.
  */
 
-public class CityWeatherDeserializer {
+class CityWeatherDeserializer {
 
-    public CityWeather deserialize(Cursor cursor, DBHelper helper){
+    CityWeather deserialize(Cursor cursor, DBHelper helper){
         CityWeather cityWeather = new CityWeather();
 
         cityWeather.setId(readID(cursor));

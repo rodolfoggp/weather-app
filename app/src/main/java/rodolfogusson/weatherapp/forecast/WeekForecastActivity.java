@@ -36,17 +36,16 @@ import rodolfogusson.weatherapp.utilities.LayoutUtils;
 
 public class WeekForecastActivity extends AppCompatActivity implements WeatherRequestTask.AsyncResponse, CityRequestTask.AsyncResponse{
 
-    CityWeather cityWeather;
-    TextView city_tv, day_tv, descr_tv, temp_tv, temp_high_tv, temp_low_tv;
-    ImageView weather_today_img;
+    private CityWeather cityWeather;
+    private TextView city_tv, day_tv, descr_tv, temp_tv, temp_high_tv, temp_low_tv;
+    private ImageView weather_today_img;
 
-    RecyclerView forecastRecyclerView;
-    LinearLayoutManager linearLayoutManager;
-    ForecastAdapter adapter;
+    private RecyclerView forecastRecyclerView;
+    private ForecastAdapter adapter;
 
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
 
-    boolean isFirstRun;
+    private boolean isFirstRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,7 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         weather_today_img = (ImageView) findViewById(R.id.weather_today_img);
 
         forecastRecyclerView = (RecyclerView) findViewById(R.id.forecast_list);
-        linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         forecastRecyclerView.setLayoutManager(linearLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(forecastRecyclerView.getContext(),
                 linearLayoutManager.getOrientation());
@@ -147,10 +146,10 @@ public class WeekForecastActivity extends AppCompatActivity implements WeatherRe
         descr_tv.setText(weather.getCurrentCondition().getCondition() +
                 " - " + weather.getCurrentCondition().getDescription());
         LayoutUtils utils = LayoutUtils.getInstance().init(this);
-        String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow());
+        String temp = utils.getConvertedTemperatureWithUnit(weather.getTemperatureNow(), this);
         temp_tv.setText(temp);
-        String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp());
-        String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp());
+        String max_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMaxTemp(), this);
+        String min_temp = utils.getConvertedTemperatureWithUnit(weather.getTemperature().getMinTemp(), this);
         temp_high_tv.setText(getString(R.string.high_txt) + max_temp);
         temp_low_tv.setText(getString(R.string.low_txt) + min_temp);
         weather_today_img.setImageBitmap(weather.getIcon());

@@ -76,7 +76,7 @@ public class Temperature implements Parcelable {
         this.night = night;
     }
 
-    protected Temperature(Parcel in) {
+    Temperature(Parcel in) {
         tempNow = in.readByte() == 0x00 ? null : in.readFloat();
         minTemp = in.readFloat();
         maxTemp = in.readFloat();

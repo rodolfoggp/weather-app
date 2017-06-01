@@ -68,7 +68,7 @@ public class CurrentCondition implements Parcelable {
         this.condition = condition;
     }
 
-    protected CurrentCondition(Parcel in) {
+    private CurrentCondition(Parcel in) {
         weatherId = in.readInt();
         humidity = in.readInt();
         pressure = in.readFloat();
